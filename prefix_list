@@ -4,8 +4,8 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX yagoo: <http://yago-knowledge.org/resource/>
-PREFIX y2geor: <http://kr.di.uoa.gr/yago2geo/resource/>
-PREFIX y2geoo: <http://kr.di.uoa.gr/yago2geo/ontology/>
+PREFIX yago2geor: <http://kr.di.uoa.gr/yago2geo/resource/>
+PREFIX yago2geoo: <http://kr.di.uoa.gr/yago2geo/ontology/>
 PREFIX strdf: <http://strdf.di.uoa.gr/ontology#>
 PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
