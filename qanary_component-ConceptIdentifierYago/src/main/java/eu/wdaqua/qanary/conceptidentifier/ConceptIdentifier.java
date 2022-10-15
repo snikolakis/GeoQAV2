@@ -212,7 +212,7 @@ public class ConceptIdentifier extends QanaryComponent {
 		List<Concept> osmConcepts = new ArrayList<Concept>();
 		List<Concept> yago2geoConcepts = new ArrayList<>();
 		List<String> allNouns = getNouns(myQanaryQuestion.getTextualRepresentation());
-		loadlistOfClasses("qanary_component-ConceptIdentifierYago/src/main/resources/YAGO2geoClasses.txt");
+		loadlistOfClasses("qanary_component-ConceptIdentifierYago/src/main/resources/concepts.txt");
 		// question string is required as input for the service call
 //		osmUriMap.put("District", "http://www.app-lab.eu/gadm/District");
 //		osmUriMap.put("County", "http://www.app-lab.eu/gadm/County");
