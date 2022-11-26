@@ -1,0 +1,2 @@
+http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#hasPart , SystemComponent
+http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#hasScaleRange , ScaleRange

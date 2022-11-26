@@ -1,0 +1,3 @@
+http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#describedBy , CalculatedValue
+http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#describedBy , Observation
+http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#indicatesMode , Mode

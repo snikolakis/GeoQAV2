@@ -412,9 +412,9 @@ public class PropertyIdentifier extends QanaryComponent {
 		System.out.println("all verbs: " + allVerbs);
 		for (String concept : coonceptsUri) {
 
-			String classLabel = concept.substring(concept.lastIndexOf("/") + 1);
+			String classLabel = concept.substring(concept.lastIndexOf("#") + 1);
 			System.out.println("classLabel : " + classLabel);
-			File file = new File("qanary_component-PropertyIdentifierYago/src/main/resources/yago2geoproperties/" + classLabel + ".txt");
+			File file = new File("src/main/resources/pemfc_properties/" + classLabel + ".txt");
 			//File file1 = new File("qanary_component-PropertyIdentifierYago/src/main/resources/yago2geoproperties/" + classLabel + ".txt");
 			Map<String, String> valuePropertyD = new HashMap<String, String>();
 			Map<String, String> labelPropertyD = new HashMap<String, String>();
@@ -472,10 +472,16 @@ public class PropertyIdentifier extends QanaryComponent {
 							Matcher m = p.matcher(entry.getValue());
 //							if (!concept.contains(verb)) {
 //								System.out.println("before matching if condition =============== "+ verb);
-							if (m.find() && !entry.getValue().equalsIgnoreCase("crosses") && !entry.getKey().contains("Wikipage")
-									&& !entry.getKey().equalsIgnoreCase("runs")
-									&& !entry.getKey().equalsIgnoreCase("south")
-									&& !entry.getKey().equalsIgnoreCase("number") && !verb.equalsIgnoreCase("km") && !verb.equalsIgnoreCase("of") && !verb.equalsIgnoreCase("number") && !verb.equalsIgnoreCase("range") && !verb.equalsIgnoreCase("be") && !verb.equalsIgnoreCase("in")&& entry.getKey().length() > 2) {
+							// retrieval verbs should not get checked further
+							if (m.find() && (entry.getValue().equalsIgnoreCase("get") || entry.getValue().equalsIgnoreCase("return") || entry.getValue().equalsIgnoreCase("find"))) {
+								continue;
+							}
+							// NOT NEEDED ANYMORE
+							// && !entry.getValue().equalsIgnoreCase("crosses") && !entry.getKey().contains("Wikipage")
+							// 		&& !entry.getKey().equalsIgnoreCase("runs")
+							// 		&& !entry.getKey().equalsIgnoreCase("south")
+							// 		&& !entry.getKey().equalsIgnoreCase("number") && !verb.equalsIgnoreCase("km") && !verb.equalsIgnoreCase("of") && !verb.equalsIgnoreCase("number") && !verb.equalsIgnoreCase("range") && !verb.equalsIgnoreCase("be") && !verb.equalsIgnoreCase("in")
+							if (m.find() && entry.getKey().length() > 2) {
 								valueFlag = true;
 								Property property = new Property();
 								if (relationList.size() == 0 || !relationList.contains(entry.getKey())) {
@@ -490,12 +496,13 @@ public class PropertyIdentifier extends QanaryComponent {
 										if(property.uri.equals("http://yago-knowledge.org/resource/infobox/en/highest") || property.uri.equals("http://dbpedia.org/property/height"))
 											property.uri = "http://yago-knowledge.org/resource/infobox/en/elevationm";
 									}*/
-									if(!entry.getKey().contains("geosparql#sfWithin")&&!entry.getKey().contains("geosparql#sfTouches") && !entry.getKey().contains("geosparql#sfIntersects")){
-										properties.add(property);
-										System.out.println("For class : " + classLabel + "   Found Value: " + entry.getKey()
-												+ " :" + entry.getValue() + " : Begin : " + property.begin + "  : end "
-												+ property.end);
-									}
+									// PROBABLY NOT NEEDED ANYMORE
+									// if(!entry.getKey().contains("geosparql#sfWithin")&&!entry.getKey().contains("geosparql#sfTouches") && !entry.getKey().contains("geosparql#sfIntersects")){
+									properties.add(property);
+									System.out.println("For class : " + classLabel + "   Found Value: " + entry.getKey()
+											+ " :" + entry.getValue() + " : Begin : " + property.begin + "  : end "
+											+ property.end);
+									// }
 
 
 //										}
@@ -506,6 +513,34 @@ public class PropertyIdentifier extends QanaryComponent {
 //							}
 						}
 					}
+					// if value is not find based on verbs, try to discover it based on the 
+					// concepts present in the question
+					// TODO: Check if needed in future
+					// if (!valueFlag) {
+					// 	for (Entry<String, String> entry : labelPropertyD.entrySet()) {
+					// 		for (String concept2 : coonceptsUri) {
+					// 			String classLabel2 = concept2.substring(concept2.lastIndexOf("#") + 1);
+					// 			if (!classLabel.equals(classLabel2)) {
+					// 				if (entry.getValue().equals(classLabel2)) {
+					// 					valueFlag = true;
+					// 					Property property = new Property();
+					// 					if (relationList.size() == 0 || !relationList.contains(entry.getKey())) {
+					// 						relationList.add(entry.getKey());
+					// 						valuePropertyList.add(entry.getKey());
+					// 						property.begin = lemQuestion.toLowerCase().indexOf(verb);
+					// 						property.end = property.begin + verb.length();
+					// 						property.label = entry.getValue();
+					// 						property.uri = entry.getKey();
+					// 						properties.add(property);
+					// 						System.out.println("For class : " + classLabel + "   Found Value: " + entry.getKey()
+					// 								+ " :" + entry.getValue() + " : Begin : " + property.begin + "  : end "
+					// 								+ property.end);
+					// 					}
+					// 				}
+					// 			}
+					// 		}
+					// 	}
+					// }
 //					bw1.close();
 				}
 			}

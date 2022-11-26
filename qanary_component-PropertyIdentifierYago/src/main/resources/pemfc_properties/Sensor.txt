@@ -1,0 +1,3 @@
+http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#madeObservation , Observation
+http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#isReliableAt_t , Reliability
+http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#isHostedBy , Platform

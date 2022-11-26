@@ -1,0 +1,1 @@
+http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#isPropertyOf , FeatureOfInterest
