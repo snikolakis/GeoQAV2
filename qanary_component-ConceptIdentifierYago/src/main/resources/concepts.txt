@@ -1,17 +1,18 @@
-Calculated Value,http://semanticweb.org/bset8/ontologies/2017/4/untitled-ontology-6#CalculatedValue
-Condition,http://semanticweb.org/bset8/ontologies/2017/4/untitled-ontology-6#Condition
-Fuel Cell,http://semanticweb.org/bset8/ontologies/2017/4/untitled-ontology-6#FuelCell
-Fuel Cell Stack,http://semanticweb.org/bset8/ontologies/2017/4/untitled-ontology-6#FuelCellStack
-Fuel Cell System,http://semanticweb.org/bset8/ontologies/2017/4/untitled-ontology-6#FuelCellSystem
-Mitigation Action,http://semanticweb.org/bset8/ontologies/2017/4/untitled-ontology-6#MitigationAction
-Mode,http://semanticweb.org/bset8/ontologies/2017/4/untitled-ontology-6#Mode
-Operating Range,http://semanticweb.org/bset8/ontologies/2017/4/untitled-ontology-6#OperatingRange
-Scale Range,http://semanticweb.org/bset8/ontologies/2017/4/untitled-ontology-6#ScaleRange
-Sensor,http://semanticweb.org/bset8/ontologies/2017/4/untitled-ontology-6#Sensor
-Sensor Output,http://semanticweb.org/bset8/ontologies/2017/4/untitled-ontology-6#SensorOutput
-State,http://semanticweb.org/bset8/ontologies/2017/4/untitled-ontology-6#State
-System,http://semanticweb.org/bset8/ontologies/2017/4/untitled-ontology-6#System
-System Component,http://semanticweb.org/bset8/ontologies/2017/4/untitled-ontology-6#SystemComponent
-System Input,http://semanticweb.org/bset8/ontologies/2017/4/untitled-ontology-6#SystemInput
-System Output,http://semanticweb.org/bset8/ontologies/2017/4/untitled-ontology-6#SystemOutput
-Voltage Cycle Number,http://semanticweb.org/bset8/ontologies/2017/4/untitled-ontology-6#VoltageCycleNumber
+Agent,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Agent
+Calculated Value,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#CalculatedValue
+Feature Of Interest,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#FeatureOfInterest
+Fuel Cell Stack,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#FuelCellStack
+Fuel Cell System,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#FuelCellSystem
+Mitigation Action,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#MitigationAction
+Mode,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Mode
+Observable Property,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#ObservableProperty
+Observation,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Observation
+Operating Range,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#OperatingRange
+Platform,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Platform
+Property,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Property
+Reliability,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Reliability
+Result,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Result
+Sensor,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Sensor
+Sensor Output,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#SensorOutput
+State,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#State
+System,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#System
