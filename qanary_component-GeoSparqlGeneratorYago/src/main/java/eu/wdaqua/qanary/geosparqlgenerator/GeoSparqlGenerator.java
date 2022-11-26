@@ -125,7 +125,7 @@ public class GeoSparqlGenerator extends QanaryComponent {
 
 	public static Boolean answerAvailable(String concept, String instance, String relation) {
 		Boolean found = false;
-		//concept = concept.substring(concept.lastIndexOf('/') + 1);
+		// concept = concept.substring(concept.lastIndexOf('/') + 1);
 		System.out.println("===============Calling answer available========================");
 		// parse the csv into a list of arrays
 		ArrayList<String[]> ls = new ArrayList<String[]>();
@@ -163,8 +163,7 @@ public class GeoSparqlGenerator extends QanaryComponent {
 			QueryExecution objectToExec;
 
 			String sparqlQuery = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
-					+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
-					+ " SELECT  distinct ?p "
+					+ "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> " + " SELECT  distinct ?p "
 					+ " WHERE { ?x rdf:type <" + concept + ">. ?x ?p <" + instance + ">. } ";
 			System.out.println("sparql query: " + sparqlQuery);
 			objectToExec = QueryExecutionFactory.sparqlService(endpoint, sparqlQuery);
@@ -406,40 +405,40 @@ public class GeoSparqlGenerator extends QanaryComponent {
 		}
 	}
 
-	public static int wordcount(String string)
-	{
-		int count=0;
+	public static int wordcount(String string) {
+		int count = 0;
 
-		char ch[]= new char[string.length()];
-		for(int i=0;i<string.length();i++)
-		{
-			ch[i]= string.charAt(i);
-			if( ((i>0)&&(ch[i]!=' ')&&(ch[i-1]==' ')) || ((ch[0]!=' ')&&(i==0)) )
+		char ch[] = new char[string.length()];
+		for (int i = 0; i < string.length(); i++) {
+			ch[i] = string.charAt(i);
+			if (((i > 0) && (ch[i] != ' ') && (ch[i - 1] == ' ')) || ((ch[0] != ' ') && (i == 0)))
 				count++;
 		}
 		return count;
 	}
 
-	public static void mergeNodesBasedOnInstances(){
+	public static void mergeNodesBasedOnInstances() {
 
 	}
-	public static void mergeNodesBasedOnConcepts(Tree tree,List<List<Concept>> concepts, String question){
+
+	public static void mergeNodesBasedOnConcepts(Tree tree, List<List<Concept>> concepts, String question) {
 
 		int wordCount = 0;
-		for(List<Concept> cons : concepts){
-			//String conceptPhrashinQuestion = question.substring(question.indexOf(con.begin),question.indexOf(con.end));
-			//System.out.println("concept phrash on question : "+conceptPhrashinQuestion);
-			for(Concept con:cons) {
+		for (List<Concept> cons : concepts) {
+			// String conceptPhrashinQuestion =
+			// question.substring(question.indexOf(con.begin),question.indexOf(con.end));
+			// System.out.println("concept phrash on question : "+conceptPhrashinQuestion);
+			for (Concept con : cons) {
 				System.out.println("concept : " + con.label);
 				System.out.println("concept : " + con.link);
 				System.out.println("My Question : " + question);
 			}
 		}
 
-		/*for (int j = 0; j < myTreeNodes1.size() - 1; j++) {
-			DependencyTreeNode tnj = myTreeNodes1.get(j);
-			DependencyTreeNode tnj1 = myTreeNodes1.get(j + 1);
-		}*/
+		/*
+		 * for (int j = 0; j < myTreeNodes1.size() - 1; j++) { DependencyTreeNode tnj =
+		 * myTreeNodes1.get(j); DependencyTreeNode tnj1 = myTreeNodes1.get(j + 1); }
+		 */
 	}
 
 	public static String walkTreeAndGetPattern1() {
@@ -494,18 +493,17 @@ public class GeoSparqlGenerator extends QanaryComponent {
 				}
 			}
 			if ((tnj.posTag.equalsIgnoreCase("NN") || tnj.posTag.equalsIgnoreCase("NNP")
-					|| tnj.posTag.equalsIgnoreCase("NNPS"))
-					&& (tnj1.m_name.contains("'s"))) {
-					tnj.m_name += " " + tnj1.m_name;
-					tnj.endIndex = tnj1.endIndex;
-					if (tnj1.conceptList.size() > 0) {
-						tnj.conceptList.addAll(tnj1.conceptList);
-					}
-					if (tnj1.entityList.size() > 0) {
-						tnj.entityList.addAll(tnj1.entityList);
-					}
-					myTreeNodes1.remove(j + 1);
-					j = j - 1;
+					|| tnj.posTag.equalsIgnoreCase("NNPS")) && (tnj1.m_name.contains("'s"))) {
+				tnj.m_name += " " + tnj1.m_name;
+				tnj.endIndex = tnj1.endIndex;
+				if (tnj1.conceptList.size() > 0) {
+					tnj.conceptList.addAll(tnj1.conceptList);
+				}
+				if (tnj1.entityList.size() > 0) {
+					tnj.entityList.addAll(tnj1.entityList);
+				}
+				myTreeNodes1.remove(j + 1);
+				j = j - 1;
 
 			}
 //			if (tnj.relationList.size() > 0 && tnj1.entityList.size() > 0) {
@@ -666,23 +664,24 @@ public class GeoSparqlGenerator extends QanaryComponent {
 	}
 
 	public static void annotateTreenode(Concept con) {
-		System.out.println("Concept start: "+con.begin+"\t end: "+con.end+"\t con label : "+con.label +"\t con link : "+con.link);
+		System.out.println("Concept start: " + con.begin + "\t end: " + con.end + "\t con label : " + con.label
+				+ "\t con link : " + con.link);
 		int wordPhrashe = wordcount(con.label);
-		if(wordPhrashe>1){
+		if (wordPhrashe > 1) {
 			JaroWinkler jw = new JaroWinkler();
-			System.out.println("size difference : "+(myTreeNodes1.size()-wordPhrashe));
-			for(int i=0;i< myTreeNodes1.size()-wordPhrashe;i++){
+			System.out.println("size difference : " + (myTreeNodes1.size() - wordPhrashe));
+			for (int i = 0; i < myTreeNodes1.size() - wordPhrashe; i++) {
 				String treeNodeLabel = "";
-				for(int j=0;j<wordPhrashe;j++){
-					if(myTreeNodes1.get(i+j).entityList.size()>0)
+				for (int j = 0; j < wordPhrashe; j++) {
+					if (myTreeNodes1.get(i + j).entityList.size() > 0)
 						break;
-					treeNodeLabel += myTreeNodes1.get(i+j).m_name+" ";
-					System.out.println("tree node label : "+myTreeNodes1.get(i+j).m_name+"\t (i+j)"+(i+j));
+					treeNodeLabel += myTreeNodes1.get(i + j).m_name + " ";
+					System.out.println("tree node label : " + myTreeNodes1.get(i + j).m_name + "\t (i+j)" + (i + j));
 				}
-				System.out.println("treeNodeLabel : "+treeNodeLabel);
+				System.out.println("treeNodeLabel : " + treeNodeLabel);
 				treeNodeLabel = treeNodeLabel.trim();
-				System.out.println("string similarity : "+ jw.similarity(treeNodeLabel,con.label));
-				if(jw.similarity(treeNodeLabel, con.label)>0.99) {
+				System.out.println("string similarity : " + jw.similarity(treeNodeLabel, con.label));
+				if (jw.similarity(treeNodeLabel, con.label) > 0.99) {
 					DependencyTreeNode tn = myTreeNodes1.get(i);
 					for (int j = 1; j < wordPhrashe; j++) {
 						tn.m_name += " " + myTreeNodes1.get(i + j).m_name;
@@ -692,12 +691,12 @@ public class GeoSparqlGenerator extends QanaryComponent {
 					}
 					int cnt = 1;
 					for (int j = 1; cnt < wordPhrashe; cnt++) {
-						myTreeNodes1.remove(i+j);
-						System.out.println("removing node : (i+j) : "+(i+j));
+						myTreeNodes1.remove(i + j);
+						System.out.println("removing node : (i+j) : " + (i + j));
 					}
-					for(DependencyTreeNode treenode:myTreeNodes1){
-						System.out.println("node label : "+treenode.m_name);
-						System.out.println("node indexes : "+treenode.startIndex +"\t end : "+treenode.endIndex);
+					for (DependencyTreeNode treenode : myTreeNodes1) {
+						System.out.println("node label : " + treenode.m_name);
+						System.out.println("node indexes : " + treenode.startIndex + "\t end : " + treenode.endIndex);
 					}
 					break;
 				}
@@ -718,13 +717,15 @@ public class GeoSparqlGenerator extends QanaryComponent {
 	}
 
 	public static void annotateTreenode(Entity ent) {
-		System.out.println("Entity start: " + ent.begin + "\t end: " + ent.end + "\t enity label : "+ent.namedEntity);
+		System.out.println("Entity start: " + ent.begin + "\t end: " + ent.end + "\t enity label : " + ent.namedEntity);
 		for (DependencyTreeNode tn : myTreeNodes1) {
 			System.out.println("tree node start: " + tn.startIndex + "\t end: " + tn.endIndex);
 			if (tn.startIndex < ent.end && tn.endIndex > ent.begin && tn.m_name.length() > 1) {
 				System.out.println("getting in index condition ");
-				System.out.println("Named Entity : "+ent.namedEntity +"\t Tree Node : "+tn.m_name);
-				if (ent.namedEntity.toLowerCase(Locale.ROOT).contains(tn.m_name.toLowerCase(Locale.ROOT)) && !tn.m_name.equalsIgnoreCase("and") && !tn.m_name.equalsIgnoreCase("the")&& !tn.m_name.equalsIgnoreCase("to")) { // ent.namedEntity.equalsIgnoreCase(tn.m_name)) {
+				System.out.println("Named Entity : " + ent.namedEntity + "\t Tree Node : " + tn.m_name);
+				if (ent.namedEntity.toLowerCase(Locale.ROOT).contains(tn.m_name.toLowerCase(Locale.ROOT))
+						&& !tn.m_name.equalsIgnoreCase("and") && !tn.m_name.equalsIgnoreCase("the")
+						&& !tn.m_name.equalsIgnoreCase("to")) { // ent.namedEntity.equalsIgnoreCase(tn.m_name)) {
 //					System.out.println("annotated tree node : "+tn.m_name+"\t with entity : "+ent.uri + "::"+ent.namedEntity);
 					tn.entityList.add(ent);
 				}
@@ -733,24 +734,41 @@ public class GeoSparqlGenerator extends QanaryComponent {
 	}
 
 	public static void annotateTreenode(Property property, String myQuestion) {
-		System.out.println("Property start: " + property.begin + "\t end: " + property.end+"\t proprty uri : "+property.uri);
+		System.out.println(
+				"Property start: " + property.begin + "\t end: " + property.end + "\t proprty uri : " + property.uri);
 		for (DependencyTreeNode tn : myTreeNodes1) {
 			System.out.println("tree node start: " + tn.startIndex + "\t end: " + tn.endIndex);
-			if(tn.posTag.equalsIgnoreCase("JJS") && (!myQuestion.toLowerCase(Locale.ROOT).contains("population") || myQuestion.toLowerCase(Locale.ROOT).contains(" county")) && !myQuestion.toLowerCase(Locale.ROOT).contains(" area")  ){
-				if(property.uri.toLowerCase(Locale.ROOT).contains("length")||property.uri.toLowerCase(Locale.ROOT).contains("elevation")||property.uri.toLowerCase(Locale.ROOT).contains("area")||property.uri.contains("populationtotal")||property.uri.toLowerCase(Locale.ROOT).contains("floorcount")||property.uri.toLowerCase(Locale.ROOT).contains("createdondate")){
+			if (tn.posTag.equalsIgnoreCase("JJS")
+					&& (!myQuestion.toLowerCase(Locale.ROOT).contains("population")
+							|| myQuestion.toLowerCase(Locale.ROOT).contains(" county"))
+					&& !myQuestion.toLowerCase(Locale.ROOT).contains(" area")) {
+				if (property.uri.toLowerCase(Locale.ROOT).contains("length")
+						|| property.uri.toLowerCase(Locale.ROOT).contains("elevation")
+						|| property.uri.toLowerCase(Locale.ROOT).contains("area")
+						|| property.uri.contains("populationtotal")
+						|| property.uri.toLowerCase(Locale.ROOT).contains("floorcount")
+						|| property.uri.toLowerCase(Locale.ROOT).contains("createdondate")) {
 					tn.propertyList.add(property);
 				}
-			}else if((myQuestion.contains(" most") || myQuestion.contains(" least"))&&(property.uri.contains("http://kr.di.uoa.gr/yago2geo/ontology/hasGAG_Population")||property.uri.contains("http://dbpedia.org/ontology/numberOfVisitors")||property.uri.contains("http://yago-knowledge.org/resource/infobox/en/populationtotal")||property.uri.contains("http://yago-knowledge.org/resource/infobox/en/elevationm"))){
-				if(tn.m_name.contains("populat")||tn.m_name.contains("popular")) {
+			} else if ((myQuestion.contains(" most") || myQuestion.contains(" least"))
+					&& (property.uri.contains("http://kr.di.uoa.gr/yago2geo/ontology/hasGAG_Population")
+							|| property.uri.contains("http://dbpedia.org/ontology/numberOfVisitors")
+							|| property.uri.contains("http://yago-knowledge.org/resource/infobox/en/populationtotal")
+							|| property.uri.contains("http://yago-knowledge.org/resource/infobox/en/elevationm"))) {
+				if (tn.m_name.contains("populat") || tn.m_name.contains("popular")) {
 					tn.propertyList.add(property);
 				}
-			}else if (tn.startIndex < property.end && tn.endIndex > property.begin && tn.m_name.length() > 1 && !tn.m_name.equalsIgnoreCase("the") && !tn.m_name.equalsIgnoreCase("in")&& !tn.m_name.equalsIgnoreCase("national")) {
+			} else if (tn.startIndex < property.end && tn.endIndex > property.begin && tn.m_name.length() > 1
+					&& !tn.m_name.equalsIgnoreCase("the") && !tn.m_name.equalsIgnoreCase("in")
+					&& !tn.m_name.equalsIgnoreCase("national")) {
 				String uriLabel = property.uri;
-				if(uriLabel.contains("strdf:area") && (tn.m_name.toLowerCase().contains("area") || tn.m_name.toLowerCase().contains("biggest") || tn.m_name.toLowerCase().contains("smallest")|| tn.m_name.toLowerCase().contains("largest"))){
+				if (uriLabel.contains("strdf:area") && (tn.m_name.toLowerCase().contains("area")
+						|| tn.m_name.toLowerCase().contains("biggest") || tn.m_name.toLowerCase().contains("smallest")
+						|| tn.m_name.toLowerCase().contains("largest"))) {
 					System.out.println("tree node label : " + tn.m_name + "\t urilabel : " + uriLabel);
 					tn.propertyList.add(property);
-				}else {
-					if(uriLabel.contains("/")) {
+				} else {
+					if (uriLabel.contains("/")) {
 						uriLabel = uriLabel.substring(uriLabel.lastIndexOf("/"));
 						if (uriLabel.toLowerCase().contains(tn.m_name.toLowerCase())) { // ent.namedEntity.equalsIgnoreCase(tn.m_name))
 							// {
@@ -766,7 +784,8 @@ public class GeoSparqlGenerator extends QanaryComponent {
 	public static void annotateTreenode(SpatialRelation sr) {
 		System.out.println("sr.relation : " + sr.relation);
 		for (DependencyTreeNode tn : myTreeNodes1) {
-			if (tn.m_name.contains(sr.relation) ||(tn.m_name.contains("cross")&&sr.relation.contains("cross")) || (tn.m_name.contains("most") && sr.relation.contains("most"))) {
+			if (tn.m_name.contains(sr.relation) || (tn.m_name.contains("cross") && sr.relation.contains("cross"))
+					|| (tn.m_name.contains("most") && sr.relation.contains("most"))) {
 				if (!(sr.relation.length() < tn.m_name.length())) {
 					System.out.println("relation : " + sr.relation);
 					if (sr.relation.equalsIgnoreCase("nearest") || sr.relation.equalsIgnoreCase("closest"))
@@ -775,13 +794,13 @@ public class GeoSparqlGenerator extends QanaryComponent {
 						sr.relation = "crosses";
 					tn.relationList.add(sr);
 				}
-			}else if(tn.m_name.contains("locat")&&sr.relation.equalsIgnoreCase("located")){
+			} else if (tn.m_name.contains("locat") && sr.relation.equalsIgnoreCase("located")) {
 				tn.relationList.add(sr);
 			}
 		}
 	}
 
-	public static ArrayList<String> getQPConstituents(String question){
+	public static ArrayList<String> getQPConstituents(String question) {
 		// set up pipeline properties
 		ArrayList<String> retValues = new ArrayList<>();
 		Properties props = new Properties();
@@ -792,23 +811,21 @@ public class GeoSparqlGenerator extends QanaryComponent {
 		// set up Stanford CoreNLP pipeline
 		StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
 		// build annotation for a review
-		Annotation annotation =
-				new Annotation(question);
+		Annotation annotation = new Annotation(question);
 		// annotate
 		pipeline.annotate(annotation);
 		// get tree
-		Tree tree =
-				annotation.get(CoreAnnotations.SentencesAnnotation.class).get(0).get(TreeCoreAnnotations.TreeAnnotation.class);
+		Tree tree = annotation.get(CoreAnnotations.SentencesAnnotation.class).get(0)
+				.get(TreeCoreAnnotations.TreeAnnotation.class);
 //		retValues.add(tree.toString());
 //		System.out.println(tree);
 		Set<Constituent> treeConstituents = tree.constituents(new LabeledScoredConstituentFactory());
 		for (Constituent constituent : treeConstituents) {
 //			System.out.println("Constituent : "+constituent.label() + " : : "+constituent.value());
-			if (constituent.label() != null &&
-					( constituent.label().toString().equals("QP"))) {
+			if (constituent.label() != null && (constituent.label().toString().equals("QP"))) {
 //				System.out.println("found constituent: "+constituent.toString());
-				retValues.add(tree.getLeaves().subList(constituent.start(), constituent.end()+1).toString());
-				System.out.println(tree.getLeaves().subList(constituent.start(), constituent.end()+1));
+				retValues.add(tree.getLeaves().subList(constituent.start(), constituent.end() + 1).toString());
+				System.out.println(tree.getLeaves().subList(constituent.start(), constituent.end() + 1));
 			}
 		}
 		return retValues;
@@ -829,7 +846,8 @@ public class GeoSparqlGenerator extends QanaryComponent {
 			SemanticGraph dependencies = sentence.get(SemanticGraphCoreAnnotations.BasicDependenciesAnnotation.class);
 			List<SemanticGraphEdge> edges = dependencies.edgeListSorted();
 			for (SemanticGraphEdge edge : edges) {
-				if ((edge.getSource().toString().contains("JJ")||edge.getSource().toString().contains("NNS")) && edge.getDependent().toString().contains("RBS")) {
+				if ((edge.getSource().toString().contains("JJ") || edge.getSource().toString().contains("NNS"))
+						&& edge.getDependent().toString().contains("RBS")) {
 					retVal = true;
 				} else if (edge.getSource().toString().contains("NN")
 						&& edge.getDependent().toString().contains("JJS")) {
@@ -839,6 +857,7 @@ public class GeoSparqlGenerator extends QanaryComponent {
 		}
 		return retVal;
 	}
+
 	public static String isCDNNS(String documentText) {
 		String retVal = "";
 		Properties props = new Properties();
@@ -854,10 +873,11 @@ public class GeoSparqlGenerator extends QanaryComponent {
 			SemanticGraph dependencies = sentence.get(SemanticGraphCoreAnnotations.BasicDependenciesAnnotation.class);
 			List<SemanticGraphEdge> edges = dependencies.edgeListSorted();
 			for (SemanticGraphEdge edge : edges) {
-				System.out.println("edge is : "+edge.toString());
-				if ((edge.getSource().toString().contains("CD")) && (edge.getDependent().toString().contains("NNS")||edge.getDependent().toString().contains("NN"))) {
+				System.out.println("edge is : " + edge.toString());
+				if ((edge.getSource().toString().contains("CD")) && (edge.getDependent().toString().contains("NNS")
+						|| edge.getDependent().toString().contains("NN"))) {
 					retVal = edge.getSource().toString();
-					System.out.println("CD value : "+retVal);
+					System.out.println("CD value : " + retVal);
 				} else if ((edge.getSource().toString().contains("NN") || edge.getSource().toString().contains("NNS"))
 						&& edge.getDependent().toString().contains("CD")) {
 					retVal = edge.getDependent().toString();
@@ -882,28 +902,28 @@ public class GeoSparqlGenerator extends QanaryComponent {
 			SemanticGraph dependencies = sentence.get(SemanticGraphCoreAnnotations.BasicDependenciesAnnotation.class);
 			List<SemanticGraphEdge> edges = dependencies.edgeListSorted();
 			for (SemanticGraphEdge edge : edges) {
-				System.out.println("edge is : "+edge.toString());
+				System.out.println("edge is : " + edge.toString());
 				if ((edge.getSource().toString().contains("CD"))) {
 					String tempVal = edge.getSource().toString();
-					tempVal = tempVal.substring(0,tempVal.indexOf("/"));
-					//retVal = Double.parseDouble(tempVal);
+					tempVal = tempVal.substring(0, tempVal.indexOf("/"));
+					// retVal = Double.parseDouble(tempVal);
 					String testString = tempVal.replaceAll("[^-\\d]+", "");
-					System.out.println("test string: "+testString);
-					if(testString.length()>0){
+					System.out.println("test string: " + testString);
+					if (testString.length() > 0) {
 						retVal = Double.parseDouble(testString);
-						System.out.println("======= propValue : "+retVal);
+						System.out.println("======= propValue : " + retVal);
 					}
-					System.out.println("CD value : "+tempVal);
-				} else if ( edge.getDependent().toString().contains("CD")) {
+					System.out.println("CD value : " + tempVal);
+				} else if (edge.getDependent().toString().contains("CD")) {
 					String tempVal = edge.getDependent().toString();
-					tempVal = tempVal.substring(0,tempVal.indexOf("/"));
+					tempVal = tempVal.substring(0, tempVal.indexOf("/"));
 					String testString = tempVal.replaceAll("[^-\\d]+", "");
-					System.out.println("test string: "+testString);
-					if(testString.length()>0){
+					System.out.println("test string: " + testString);
+					if (testString.length() > 0) {
 						retVal = Double.parseDouble(testString);
-						System.out.println("======= propValue : "+retVal);
+						System.out.println("======= propValue : " + retVal);
 					}
-					System.out.println("CD value : "+tempVal);
+					System.out.println("CD value : " + tempVal);
 				}
 			}
 		}
@@ -936,7 +956,6 @@ public class GeoSparqlGenerator extends QanaryComponent {
 		return retVal;
 	}
 
-
 	public static String getMostRBS(String documentText) {
 		String retVal = "";
 		Properties props = new Properties();
@@ -954,14 +973,15 @@ public class GeoSparqlGenerator extends QanaryComponent {
 			for (SemanticGraphEdge edge : edges) {
 //				System.out.println("edge source : "+edge.getSource().toString());
 //				System.out.println("edge dependent : "+edge.getDependent().toString());
-				if((edge.getSource().toString().contains("most/"))){
+				if ((edge.getSource().toString().contains("most/"))) {
 					if (edge.getSource().toString().contains("RBS") || edge.getSource().toString().contains("JJS")) {
 						String retVals = edge.getDependent().toString();
 						retVal = retVals.split("/")[0];
 //						System.out.println("retVal : "+retVal);
 					}
-				}else if(edge.getDependent().toString().toLowerCase(Locale.ROOT).contains("most/")){
-					if (edge.getDependent().toString().contains("RBS") || edge.getDependent().toString().contains("JJS")) {
+				} else if (edge.getDependent().toString().toLowerCase(Locale.ROOT).contains("most/")) {
+					if (edge.getDependent().toString().contains("RBS")
+							|| edge.getDependent().toString().contains("JJS")) {
 						String retVals = edge.getSource().toString();
 						retVal = retVals.split("/")[0];
 //						System.out.println("retVal : "+retVal);
@@ -972,7 +992,7 @@ public class GeoSparqlGenerator extends QanaryComponent {
 		return retVal;
 	}
 
-	public static ArrayList<String> getCCConstituents(String question){
+	public static ArrayList<String> getCCConstituents(String question) {
 		// set up pipeline properties
 		ArrayList<String> retValues = new ArrayList<>();
 		Properties props = new Properties();
@@ -983,23 +1003,21 @@ public class GeoSparqlGenerator extends QanaryComponent {
 		// set up Stanford CoreNLP pipeline
 		StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
 		// build annotation for a review
-		Annotation annotation =
-				new Annotation(question);
+		Annotation annotation = new Annotation(question);
 		// annotate
 		pipeline.annotate(annotation);
 		// get tree
-		Tree tree =
-				annotation.get(CoreAnnotations.SentencesAnnotation.class).get(0).get(TreeCoreAnnotations.TreeAnnotation.class);
+		Tree tree = annotation.get(CoreAnnotations.SentencesAnnotation.class).get(0)
+				.get(TreeCoreAnnotations.TreeAnnotation.class);
 //		retValues.add(tree.toString());
 		System.out.println(tree);
 		Set<Constituent> treeConstituents = tree.constituents(new LabeledScoredConstituentFactory());
 		for (Constituent constituent : treeConstituents) {
 //			System.out.println("Constituent : "+constituent.label() + " : : "+constituent.value());
-			if (constituent.label() != null &&
-					( constituent.label().toString().equals("CC"))) {
-				System.out.println("found constituent: "+constituent.toString());
-				retValues.add(tree.getLeaves().subList(constituent.start(), constituent.end()+1).toString());
-				System.out.println(tree.getLeaves().subList(constituent.start(), constituent.end()+1));
+			if (constituent.label() != null && (constituent.label().toString().equals("CC"))) {
+				System.out.println("found constituent: " + constituent.toString());
+				retValues.add(tree.getLeaves().subList(constituent.start(), constituent.end() + 1).toString());
+				System.out.println(tree.getLeaves().subList(constituent.start(), constituent.end() + 1));
 			}
 		}
 		return retValues;
@@ -1021,7 +1039,7 @@ public class GeoSparqlGenerator extends QanaryComponent {
 			for (CoreLabel token : sentence.get(TokensAnnotation.class)) {
 				String pos = token.get(PartOfSpeechAnnotation.class);
 				if (pos.contains("CC")) {
-					System.out.println("CC postag : "+token.originalText());
+					System.out.println("CC postag : " + token.originalText());
 					postags = token.originalText();
 				}
 			}
@@ -1029,7 +1047,7 @@ public class GeoSparqlGenerator extends QanaryComponent {
 		return postags;
 	}
 
-	public static ArrayList<String> getNPConstituents(String question){
+	public static ArrayList<String> getNPConstituents(String question) {
 		// set up pipeline properties
 		ArrayList<String> retValues = new ArrayList<>();
 		Properties props = new Properties();
@@ -1040,29 +1058,27 @@ public class GeoSparqlGenerator extends QanaryComponent {
 		// set up Stanford CoreNLP pipeline
 		StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
 		// build annotation for a review
-		Annotation annotation =
-				new Annotation(question);
+		Annotation annotation = new Annotation(question);
 		// annotate
 		pipeline.annotate(annotation);
 		// get tree
-		Tree tree =
-				annotation.get(CoreAnnotations.SentencesAnnotation.class).get(0).get(TreeCoreAnnotations.TreeAnnotation.class);
+		Tree tree = annotation.get(CoreAnnotations.SentencesAnnotation.class).get(0)
+				.get(TreeCoreAnnotations.TreeAnnotation.class);
 //		retValues.add(tree.toString());
 		System.out.println(tree);
 		Set<Constituent> treeConstituents = tree.constituents(new LabeledScoredConstituentFactory());
 		for (Constituent constituent : treeConstituents) {
 //			System.out.println("Constituent : "+constituent.label() + " : : "+constituent.value());
-			if (constituent.label() != null &&
-					( constituent.label().toString().equals("NP"))) {
+			if (constituent.label() != null && (constituent.label().toString().equals("NP"))) {
 //				System.out.println("found constituent: "+constituent.toString());
-				retValues.add(tree.getLeaves().subList(constituent.start(), constituent.end()+1).toString());
+				retValues.add(tree.getLeaves().subList(constituent.start(), constituent.end() + 1).toString());
 //				System.out.println(tree.getLeaves().subList(constituent.start(), constituent.end()+1));
 			}
 		}
 		return retValues;
 	}
 
-	public static ArrayList<String> getADJPConstituents(String question){
+	public static ArrayList<String> getADJPConstituents(String question) {
 		// set up pipeline properties
 		ArrayList<String> retValues = new ArrayList<>();
 		Properties props = new Properties();
@@ -1073,33 +1089,31 @@ public class GeoSparqlGenerator extends QanaryComponent {
 		// set up Stanford CoreNLP pipeline
 		StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
 		// build annotation for a review
-		Annotation annotation =
-				new Annotation(question);
+		Annotation annotation = new Annotation(question);
 		// annotate
 		pipeline.annotate(annotation);
 		// get tree
-		Tree tree =
-				annotation.get(CoreAnnotations.SentencesAnnotation.class).get(0).get(TreeCoreAnnotations.TreeAnnotation.class);
+		Tree tree = annotation.get(CoreAnnotations.SentencesAnnotation.class).get(0)
+				.get(TreeCoreAnnotations.TreeAnnotation.class);
 //		retValues.add(tree.toString());
 		System.out.println(tree);
 		Set<Constituent> treeConstituents = tree.constituents(new LabeledScoredConstituentFactory());
 		for (Constituent constituent : treeConstituents) {
 //			System.out.println("Constituent : "+constituent.label() + " : : "+constituent.value());
-			if (constituent.label() != null &&
-					( constituent.label().toString().equals("ADJP"))) {
-				System.out.println("found constituent: "+constituent.toString());
-				retValues.add(tree.getLeaves().subList(constituent.start(), constituent.end()+1).toString());
-				System.out.println(tree.getLeaves().subList(constituent.start(), constituent.end()+1));
+			if (constituent.label() != null && (constituent.label().toString().equals("ADJP"))) {
+				System.out.println("found constituent: " + constituent.toString());
+				retValues.add(tree.getLeaves().subList(constituent.start(), constituent.end() + 1).toString());
+				System.out.println(tree.getLeaves().subList(constituent.start(), constituent.end() + 1));
 			}
 		}
 		return retValues;
 	}
 
-	public static void checkNPphrashe(List<String> nps){
-		for(String npphrs:nps){
+	public static void checkNPphrashe(List<String> nps) {
+		for (String npphrs : nps) {
 			String splittedNp[] = npphrs.split(",");
-			if(splittedNp.length>1 && splittedNp.length<5) {
-				System.out.println("NP : "+npphrs.toString());
+			if (splittedNp.length > 1 && splittedNp.length < 5) {
+				System.out.println("NP : " + npphrs.toString());
 				for (int i = 0; i < splittedNp.length; i++) {
 
 				}
@@ -4084,25 +4098,25 @@ public class GeoSparqlGenerator extends QanaryComponent {
 
 			logger.debug("store the generated GeoSPARQL query in triplestore: {}", finalQuery);
 			// STEP 3: Push the GeoSPARQL query to the triplestore
-//			for (Query generatedQuery : allQueriesList) {
-//				sparql = "PREFIX qa: <http://www.wdaqua.eu/qa#> " //
-//						+ "PREFIX oa: <http://www.w3.org/ns/openannotation/core/> " //
-//						+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " //
-//						+ "INSERT { " //
-//						+ "GRAPH <" + myQanaryUtils.getInGraph() + "> { " //
-//						+ " ?a a qa:AnnotationOfAnswerSPARQL . " //
-//						+ " ?a oa:hasTarget <URIAnswer> . " //
-//						+ " ?a oa:hasBody \"" + generatedQuery.query.replaceAll("\n", " ") + "\" ;" //
-//						+ " oa:score \"" + generatedQuery.score + "\"^^xsd:nonNegativeInteger ;"
-//						+ " oa:annotatedBy <urn:qanary:geosparqlgenerator> ; " //
-//						+ " oa:AnnotatedAt ?time . " //
-//						+ "}} " //
-//						+ "WHERE { " //
-//						+ " BIND (IRI(str(RAND())) AS ?a) ." //
-//						+ " BIND (now() as ?time) " //
-//						+ "}";
-//				myQanaryUtils.updateTripleStore(sparql, myQanaryMessage.getEndpoint().toString());
-//			}
+			for (Query generatedQuery : allQueriesList) {
+				sparql = "PREFIX qa: <http://www.wdaqua.eu/qa#> " //
+						+ "PREFIX oa: <http://www.w3.org/ns/openannotation/core/> " //
+						+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " //
+						+ "INSERT { " //
+						+ "GRAPH <" + myQanaryUtils.getInGraph() + "> { " //
+						+ " ?a a qa:AnnotationOfAnswerSPARQL . " //
+						+ " ?a oa:hasTarget <URIAnswer> . " //
+						+ " ?a oa:hasBody \"" + generatedQuery.query.replaceAll("\n", " ") + "\" ;" //
+						+ " oa:score \"" + generatedQuery.score + "\"^^xsd:nonNegativeInteger ;"
+						+ " oa:annotatedBy <urn:qanary:geosparqlgenerator> ; " //
+						+ " oa:AnnotatedAt ?time . " //
+						+ "}} " //
+						+ "WHERE { " //
+						+ " BIND (IRI(str(RAND())) AS ?a) ." //
+						+ " BIND (now() as ?time) " //
+						+ "}";
+				myQanaryUtils.updateTripleStore(sparql, myQanaryMessage.getEndpoint().toString());
+			}
 
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
