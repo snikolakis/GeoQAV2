@@ -1,0 +1,370 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY terms "http://purl.org/dc/terms/" >
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY qa "https://w3id.org/wdaqua/qanary#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY xml "http://www.w3.org/XML/1998/namespace" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.semanticweb.org/owl/owlapi/turtle#"
+     xml:base="http://www.semanticweb.org/owl/owlapi/turtle"
+     xmlns:qa="https://w3id.org/wdaqua/qanary#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:terms="http://purl.org/dc/terms/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="https://w3id.org/wdaqua/qanary#">
+        <terms:created rdf:datatype="&xsd;date">2015-10-01</terms:created>
+        <terms:title xml:lang="en">Qanary</terms:title>
+        <terms:creator rdf:resource="http://wdaqua.eu"/>
+        <terms:license rdf:resource="https://creativecommons.org/publicdomain/zero/1.0/"/>
+        <owl:imports rdf:resource="http://www.openannotation.org/spec/core/20130208/oa.owl"/>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#score -->
+
+    <owl:DatatypeProperty rdf:about="&qa;score">
+        <rdfs:comment xml:lang="en">Describes the confidence/trust we have in the Annotation.</rdfs:comment>
+        <rdfs:range rdf:resource="&xsd;decimal"/>
+        <rdfs:domain rdf:resource="http://www.w3.org/ns/oa#Annotation"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/owl/owlapi/turtle#Ontology -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/owl/owlapi/turtle#Ontology"/>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#AnnoOfEndpointOfDataset -->
+
+    <owl:Class rdf:about="&qa;AnnoOfEndpointOfDataset">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.w3.org/ns/oa#hasBody"/>
+                <owl:someValuesFrom rdf:resource="&qa;Endpoint"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&qa;AnnotationDataset"/>
+    </owl:Class>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#AnnoOfPosTag -->
+
+    <owl:Class rdf:about="&qa;AnnoOfPosTag">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.w3.org/ns/oa#hasBody"/>
+                <owl:someValuesFrom rdf:resource="&qa;PosTag"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&qa;AnnotationQuestion"/>
+    </owl:Class>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#AnnotationAnswer -->
+
+    <owl:Class rdf:about="&qa;AnnotationAnswer">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.w3.org/ns/oa#hasTarget"/>
+                <owl:someValuesFrom rdf:resource="&qa;Answer"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/oa#Annotation"/>
+    </owl:Class>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#AnnotationDataset -->
+
+    <owl:Class rdf:about="&qa;AnnotationDataset">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.w3.org/ns/oa#hasTarget"/>
+                <owl:someValuesFrom rdf:resource="&qa;Dataset"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/oa#Annotation"/>
+    </owl:Class>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#AnnotationOfAnswerFormat -->
+
+    <owl:Class rdf:about="&qa;AnnotationOfAnswerFormat">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.w3.org/ns/oa#hasBody"/>
+                <owl:someValuesFrom rdf:resource="&qa;AnswerFormat"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&qa;AnnotationAnswer"/>
+    </owl:Class>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#AnnotationOfAnswerType -->
+
+    <owl:Class rdf:about="&qa;AnnotationOfAnswerType">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.w3.org/ns/oa#hasBody"/>
+                <owl:someValuesFrom rdf:resource="&qa;AnswerType"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&qa;AnnotationAnswer"/>
+    </owl:Class>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#AnnotationOfClass -->
+
+    <owl:Class rdf:about="&qa;AnnotationOfClass">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.w3.org/ns/oa#hasBody"/>
+                <owl:someValuesFrom rdf:resource="&qa;Class"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&qa;AnnotationOfEntity"/>
+    </owl:Class>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#AnnotationOfEntity -->
+
+    <owl:Class rdf:about="&qa;AnnotationOfEntity">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.w3.org/ns/oa#hasBody"/>
+                <owl:someValuesFrom rdf:resource="&qa;Entity"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&qa;AnnotationQuestion"/>
+    </owl:Class>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#AnnotationOfInstance -->
+
+    <owl:Class rdf:about="&qa;AnnotationOfInstance">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.w3.org/ns/oa#hasBody"/>
+                <owl:someValuesFrom rdf:resource="&qa;Instance"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&qa;AnnotationOfEntity"/>
+    </owl:Class>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#AnnotationOfRelation -->
+
+    <owl:Class rdf:about="&qa;AnnotationOfRelation">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.w3.org/ns/oa#hasBody"/>
+                <owl:someValuesFrom rdf:resource="&qa;Relation"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&qa;AnnotationOfEntity"/>
+    </owl:Class>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#AnnotationOfSpotClass -->
+
+    <owl:Class rdf:about="&qa;AnnotationOfSpotClass">
+        <rdfs:subClassOf rdf:resource="&qa;AnnotationOfSpotEntity"/>
+    </owl:Class>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#AnnotationOfSpotEntity -->
+
+    <owl:Class rdf:about="&qa;AnnotationOfSpotEntity">
+        <rdfs:subClassOf rdf:resource="&qa;AnnotationQuestion"/>
+    </owl:Class>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#AnnotationOfSpotInstance -->
+
+    <owl:Class rdf:about="&qa;AnnotationOfSpotInstance">
+        <rdfs:subClassOf rdf:resource="&qa;AnnotationOfSpotEntity"/>
+    </owl:Class>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#AnnotationOfSpotRelation -->
+
+    <owl:Class rdf:about="&qa;AnnotationOfSpotRelation">
+        <rdfs:subClassOf rdf:resource="&qa;AnnotationOfSpotEntity"/>
+    </owl:Class>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#AnnotationQuestion -->
+
+    <owl:Class rdf:about="&qa;AnnotationQuestion">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.w3.org/ns/oa#hasTarget"/>
+                <owl:someValuesFrom rdf:resource="&qa;Question"/>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/ns/oa#Annotation"/>
+    </owl:Class>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#Answer -->
+
+    <owl:Class rdf:about="&qa;Answer"/>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#AnswerFormat -->
+
+    <owl:Class rdf:about="&qa;AnswerFormat"/>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#AnswerType -->
+
+    <owl:Class rdf:about="&qa;AnswerType"/>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#Class -->
+
+    <owl:Class rdf:about="&qa;Class">
+        <rdfs:subClassOf rdf:resource="&qa;Entity"/>
+    </owl:Class>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#Dataset -->
+
+    <owl:Class rdf:about="&qa;Dataset"/>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#Endpoint -->
+
+    <owl:Class rdf:about="&qa;Endpoint"/>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#Entity -->
+
+    <owl:Class rdf:about="&qa;Entity"/>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#HelperDataset -->
+
+    <owl:Class rdf:about="&qa;HelperDataset">
+        <rdfs:subClassOf rdf:resource="&qa;Dataset"/>
+    </owl:Class>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#Instance -->
+
+    <owl:Class rdf:about="&qa;Instance">
+        <rdfs:subClassOf rdf:resource="&qa;Entity"/>
+    </owl:Class>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#PosTag -->
+
+    <owl:Class rdf:about="&qa;PosTag"/>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#Question -->
+
+    <owl:Class rdf:about="&qa;Question"/>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#Relation -->
+
+    <owl:Class rdf:about="&qa;Relation">
+        <rdfs:subClassOf rdf:resource="&qa;Entity"/>
+    </owl:Class>
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary#TargetDataset -->
+
+    <owl:Class rdf:about="&qa;TargetDataset">
+        <rdfs:subClassOf rdf:resource="&qa;Dataset"/>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://w3id.org/wdaqua/qanary# -->
+
+    <owl:NamedIndividual rdf:about="https://w3id.org/wdaqua/qanary#">
+        <rdf:type rdf:resource="http://www.semanticweb.org/owl/owlapi/turtle#Ontology"/>
+        <rdfs:label xml:lang="en">Qanary ontology</rdfs:label>
+        <owl:versionInfo rdf:datatype="&xsd;decimal">1.0</owl:versionInfo>
+        <rdfs:comment xml:lang="en">Ontology to annotate a question with typical informations generated during a QA process</rdfs:comment>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.5.1) http://owlapi.sourceforge.net -->
+

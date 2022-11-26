@@ -1,42 +1,122 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+      
+  
   <modelVersion>4.0.0</modelVersion>
+      
+  
   <groupId>eu.wdaqua.qanary</groupId>
+      
+  
   <artifactId>mvn.reactor</artifactId>
+      
+  
   <version>0.1.1-SNAPSHOT</version>
+      
+  
   <packaging>pom</packaging>
+      
+  
   <modules>
+            
+    
     <module>qanary_component-archetype</module>
+            
+    
     <module>qanary_commons</module>
+            
+    
     <module>qanary_pipeline-template</module>
+            
+    
     <module>qanary_component-template</module>
+            
+    
     <module>qald-evaluator</module>
+            
+    
     <module>qanary_component-TagMeDisambiguateYago</module>
+            
+    
     <module>qanary_component-ConceptIdentifierYago</module>
+            
+    
     <module>qanary_component-RelationDetection</module>
+            
+    
     <module>qanary_component-PropertyIdentifierYago</module>
+            
+    
     <module>qanary_component-GeoSparqlGeneratorYago</module>
+            
+    
     <module>qanary_component-AGDISTIS</module>
-    <module>qanary_component-StanfordNERComponent</module>
+            
+    
+    <module>qanary_component-StanfordNERComponent</module>            
+      
+    
+    <module>qanary_component-SubgraphIdentifier</module>
+      
   </modules>
+      
+  
   <properties>
+            
+    
     <maven.compiler.source>1.8</maven.compiler.source>
+            
+    
     <maven.compiler.target>1.8</maven.compiler.target>
+          
+  
   </properties>
+      
+  
   <build>
-  <plugins>
-    <plugin>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-compiler-plugin</artifactId>
-      <version>3.8.0</version>
-      <configuration>
-        <release>13</release>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target><compilerArgs>
+          
+    
+    <plugins>
+                
+      
+      <plugin>
+                      
+        
+        <groupId>org.apache.maven.plugins</groupId>
+                      
+        
+        <artifactId>maven-compiler-plugin</artifactId>
+                      
+        
+        <version>3.8.0</version>
+                      
+        
+        <configuration>
+                            
+          
+          <release>13</release>
+                            
+          
+          <maven.compiler.source>1.8</maven.compiler.source>
+                            
+          
+          <maven.compiler.target>1.8</maven.compiler.target>
+                    
+          <compilerArgs>
           --enable-preview
         </compilerArgs>
-      </configuration>
-    </plugin>
-  </plugins>
+                          
+        
+        </configuration>
+                    
+      
+      </plugin>
+              
+    
+    </plugins>
+          
+  
   </build>
+    
+
 </project>
