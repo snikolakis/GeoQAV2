@@ -11,9 +11,15 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
 
 import eu.wdaqua.qanary.commons.QanaryMessage;
 import eu.wdaqua.qanary.commons.QanaryQuestion;
@@ -33,14 +39,130 @@ class Concept {
 	public String link;
 }
 
+class Instance {
+	public int begin;
+	public int end;
+	public String uri;
+}
+
+class PropertyPEMF {
+	public int begin;
+	public int end;
+	public String uri;
+}
+
 @Component
 /**
  * This component connected automatically to the Qanary pipeline.
- * The Qanary pipeline endpoint defined in application.properties (spring.boot.admin.url)
- * @see <a href="https://github.com/WDAqua/Qanary/wiki/How-do-I-integrate-a-new-component-in-Qanary%3F" target="_top">Github wiki howto</a>
+ * The Qanary pipeline endpoint defined in application.properties
+ * (spring.boot.admin.url)
+ * 
+ * @see <a href=
+ *      "https://github.com/WDAqua/Qanary/wiki/How-do-I-integrate-a-new-component-in-Qanary%3F"
+ *      target="_top">Github wiki howto</a>
  */
 public class SubgraphIdentifier extends QanaryComponent {
 	private static final Logger logger = LoggerFactory.getLogger(SubgraphIdentifier.class);
+	private static final Map<String, String> class_names_mapping = new HashMap<String, String>();
+	private Map<String, ArrayList<String>> synonymsList = new HashMap<String, ArrayList<String>>();
+
+	private static Map<String, String> loadListOfInstances(String fname) {
+		Map<String, String> instanceClasses = new HashMap<String, String>();
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(fname));
+			String line = "";
+			while ((line = br.readLine()) != null) {
+				String splittedLine[] = line.split(";");
+				instanceClasses.put(splittedLine[1].trim(), splittedLine[0].trim());
+			}
+			br.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			return instanceClasses;
+		}
+	}
+
+	private static Map<String, ArrayList<String>> loadListOfSynonyms(String fname) {
+		Map<String, ArrayList<String>> synonyms = new HashMap<String, ArrayList<String>>();
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(fname));
+			String line = "";
+			while ((line = br.readLine()) != null) {
+				String splittedLine[] = line.split(",");
+				ArrayList<String> allSynonymsForWord;
+				try {
+					allSynonymsForWord = new ArrayList<String>(Arrays.asList(splittedLine[1].trim().split("\\+")));
+				} catch (Exception e) {
+					allSynonymsForWord = new ArrayList<String>();
+					allSynonymsForWord.add(splittedLine[1]);
+				}
+				synonyms.put(splittedLine[0].trim(), allSynonymsForWord);
+			}
+			br.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			return synonyms;
+		}
+	}
+
+	private static Map<String, ArrayList<String>> loadListOfSuperclassRelations(String fname) {
+		Map<String, ArrayList<String>> superclassRelations = new HashMap<String, ArrayList<String>>();
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(fname));
+			String line = "";
+			while ((line = br.readLine()) != null) {
+				String splittedLine[] = line.split(",");
+				String class_ = splittedLine[0].trim();
+				String superclass = splittedLine[1].trim();
+				ArrayList<String> superclasses = superclassRelations.get(class_);
+				if (superclasses == null) {
+					superclasses = new ArrayList<String>();
+				}
+				superclasses.add(superclass);
+				superclassRelations.put(class_, superclasses);
+			}
+			br.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			return superclassRelations;
+		}
+	}
+
+	private static ArrayList<String> getAllRelevantClasses(String classLabel, ArrayList<String> superclasses) {
+		ArrayList<String> temp = new ArrayList<String>();
+		temp.add(classLabel);
+		if (superclasses == null) {
+			superclasses = new ArrayList<String>();
+		}
+		temp.addAll(superclasses);
+		return temp;
+	}
+
+	private static String mapClassName(String original_class_name) {
+		String value = class_names_mapping.get(original_class_name);
+		if (value != null) {
+			return value;
+		} else {
+			return original_class_name;
+		}
+
+	}
+
+	private static String getSmallestValidSubgraph(ArrayList<Subgraph> possible_subgraphs) {
+		int smallestSubgraphLength = Integer.MAX_VALUE;
+		String smallestSubgraph = "";
+		for (Subgraph subgraph : possible_subgraphs) {
+			int subgraphLength = subgraph.text.split(";").length;
+			if (subgraphLength < smallestSubgraphLength) {
+				smallestSubgraphLength = subgraphLength;
+				smallestSubgraph = subgraph.text;
+			}
+		}
+		return smallestSubgraph;
+	}
 
 	/**
 	 * implement this method encapsulating the functionality of your Qanary
@@ -55,14 +177,16 @@ public class SubgraphIdentifier extends QanaryComponent {
 
 		QanaryUtils myQanaryUtils = this.getUtils(myQanaryMessage);
 
-		
-		
+		// initialize mapping between class names
+		// class_names_mapping.put("System", "FuelCellSystem");
+
 		// STEP 1: get the required data from the Qanary triplestore (the global process
 		// memory)
 
 		// if required, then fetch the origin question (here the question is a
 		// textual/String question)
 		QanaryQuestion<String> myQanaryQuestion = new QanaryQuestion<String>(myQanaryMessage);
+		String question = myQanaryQuestion.getTextualRepresentation();
 
 		ResultSet r;
 		Set<Concept> concepts = new HashSet<Concept>();
@@ -99,9 +223,76 @@ public class SubgraphIdentifier extends QanaryComponent {
 			// allClassesList.add(conceptTemp.link);
 		}
 
-		
-		
+		Set<Instance> instances = new HashSet<Instance>();
+		Set<String> instancesUri = new HashSet<String>();
+
+		sparql = "PREFIX qa: <http://www.wdaqua.eu/qa#> "
+				+ "PREFIX oa: <http://www.w3.org/ns/openannotation/core/> "
+				+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> "//
+				+ "SELECT ?start ?end ?uri " + "FROM <" + myQanaryQuestion.getInGraph() + "> " //
+				+ "WHERE { " //
+				+ "    ?a a qa:AnnotationOfInstance . " + "?a oa:hasTarget [ "
+				+ "		     a               oa:SpecificResource; " //
+				+ "		     oa:hasSource    ?q; " //
+				+ "	         oa:hasSelector  [ " //
+				+ "			         a        oa:TextPositionSelector ; " //
+				+ "			         oa:start ?start ; " //
+				+ "			         oa:end   ?end " //
+				+ "		     ] " //
+				+ "    ] . " //
+				+ " ?a oa:hasBody ?uri ; "
+				+ "    oa:annotatedBy ?annotator " //
+				+ "} "
+				+ "ORDER BY ?start";
+
+		r = myQanaryUtils.selectFromTripleStore(sparql);
+		while (r.hasNext()) {
+			QuerySolution s = r.next();
+			Instance instanceTemp = new Instance();
+			instanceTemp.begin = s.getLiteral("start").getInt();
+			instanceTemp.end = s.getLiteral("end").getInt();
+			instanceTemp.uri = s.getResource("uri").getURI();
+			instances.add(instanceTemp);
+			instancesUri.add(instanceTemp.uri);
+			// TODO: maybe should be removed
+			// dbpediaClassList.add(conceptTemp.link);
+			// allClassesList.add(conceptTemp.link);
+		}
+
+		Set<PropertyPEMF> propertiesPEMF = new HashSet<PropertyPEMF>();
+		Set<String> propertiesUri = new HashSet<String>();
+
+		sparql = "PREFIX qa: <http://www.wdaqua.eu/qa#> "
+				+ "PREFIX oa: <http://www.w3.org/ns/openannotation/core/> "
+				+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> "//
+				+ "SELECT  ?uri ?start ?end " + "FROM <" + myQanaryQuestion.getInGraph() + "> " //
+				+ "WHERE { " //
+				+ "  ?a a qa:AnnotationOfRelation . " + "  ?a oa:hasTarget [ " + " a    oa:SpecificResource; "
+				+ "           oa:hasSource    ?q; " + "				oa:hasSelector  [ " //
+				+ "			         a        oa:TextPositionSelector ; " //
+				+ "			         oa:start ?start ; " //
+				+ "			         oa:end   ?end " //
+				+ "		     ] " //
+				+ "  ]; " + "     oa:hasValue ?uri ;oa:AnnotatedAt ?time} order by(?time)";
+
+		r = myQanaryUtils.selectFromTripleStore(sparql);
+		while (r.hasNext()) {
+			QuerySolution s = r.next();
+			PropertyPEMF propertyTemp = new PropertyPEMF();
+			propertyTemp.begin = s.getLiteral("start").getInt();
+			propertyTemp.end = s.getLiteral("end").getInt();
+			propertyTemp.uri = s.getResource("uri").getURI();
+			propertiesPEMF.add(propertyTemp);
+			propertiesUri.add(propertyTemp.uri);
+		}
+
 		// STEP 2: compute new knowledge about the given question
+		// read superclass relations that may be used as synonyms
+		Map<String, ArrayList<String>> superclassRelations = loadListOfSuperclassRelations(
+				"qanary_component-SubgraphIdentifier/src/main/resources/superclass_relations.txt");
+		this.synonymsList = loadListOfSynonyms(
+				"qanary_component-SubgraphIdentifier/src/main/resources/synonyms_list.txt");
+
 		// read subgraphs to identify against the identified concepts
 		File file = new File("qanary_component-SubgraphIdentifier/src/main/resources/subgraphs_all.txt");
 		ArrayList<Subgraph> subgraphs = new ArrayList<Subgraph>();
@@ -130,16 +321,65 @@ public class SubgraphIdentifier extends QanaryComponent {
 			}
 			br.close();
 		} else {
-			logger.error("Missing subgraphs file! '" + file.getName() + "' file is required but no " + file.getAbsolutePath() + " file was found.");
+			logger.error("Missing subgraphs file! '" + file.getName() + "' file is required but no "
+					+ file.getAbsolutePath() + " file was found.");
 		}
 
 		ArrayList<Subgraph> possible_subgraphs = new ArrayList<Subgraph>(subgraphs);
+
+		// find all subgraphs that satisfy synonyms and then use those as possible
+		// subgraphs for the rest of the process
 		ArrayList<Subgraph> temp = new ArrayList<Subgraph>();
+		for (String word : this.synonymsList.keySet()) {
+			if (question.contains(word)) {
+				for (Subgraph subgraph : possible_subgraphs) {
+					for (String synonym : this.synonymsList.get(word)) {
+						if (subgraph.text.contains(synonym)) {
+							temp.add(subgraph);
+						}
+					}
+				}
+			}
+		}
+		possible_subgraphs.clear();
+		possible_subgraphs.addAll(temp);
+
 		for (String concept : conceptsUri) {
-			String classLabel = concept.substring(concept.lastIndexOf("#") + 1);
 			temp.clear();
+			String classLabel = concept.substring(concept.lastIndexOf("#") + 1);
+			ArrayList<String> superclasses = superclassRelations.get(classLabel);
+			for (String temp_class : getAllRelevantClasses(classLabel, superclasses)) {
+				temp_class = mapClassName(temp_class);
+				String superclass_text = "";
+				if (!temp_class.equals(classLabel)) {
+					superclass_text = " (superclass)";
+				}
+				logger.info("Found concept" + superclass_text + ": " + temp_class);
+				for (Subgraph sub : possible_subgraphs) {
+					if (sub.entities.contains(temp_class)) {
+						temp.add(sub);
+					}
+				}
+			}
+			possible_subgraphs.clear();
+			possible_subgraphs.addAll(temp);
+		}
+
+		// if (possible_subgraphs.size() > 0) {
+		// String res_subgraphs = "";
+		// for (Subgraph sub : possible_subgraphs) {
+		// res_subgraphs += sub.text + "\n";
+		// }
+		// logger.info("Found the following possible subgraphs:\n\n" + res_subgraphs);
+		// } else {
+		// logger.error("No valid subgraphs found to answer the given question!");
+		// }
+		for (String property : propertiesUri) {
+			temp.clear();
+			String propertyLabel = property.substring(property.lastIndexOf("#") + 1);
+			logger.info("Found the property: " + propertyLabel);
 			for (Subgraph sub : possible_subgraphs) {
-				if (sub.entities.contains(classLabel)) {
+				if (sub.properties.contains(propertyLabel)) {
 					temp.add(sub);
 				}
 			}
@@ -147,16 +387,82 @@ public class SubgraphIdentifier extends QanaryComponent {
 			possible_subgraphs.addAll(temp);
 		}
 
+		// if (possible_subgraphs.size() > 0) {
+		Map<String, String> instanceClasses = loadListOfInstances(
+				"qanary_component-InstanceIdentifier/src/main/resources/instances.txt");
+		for (String instance : instancesUri) {
+			temp.clear();
+			String instanceClassLabel = instanceClasses.get(instance);
+			ArrayList<String> superclasses = superclassRelations.get(instanceClassLabel);
+			for (String temp_class : getAllRelevantClasses(instanceClassLabel, superclasses)) {
+				temp_class = mapClassName(temp_class);
+				String superclass_text = "";
+				if (!temp_class.equals(instanceClassLabel)) {
+					superclass_text = " (superclass)";
+				}
+				logger.info("Found the instance class" + superclass_text + ": " + temp_class);
+				for (Subgraph sub : possible_subgraphs) {
+					if (sub.entities.contains(temp_class)) {
+						temp.add(sub);
+					}
+				}
+			}
+			possible_subgraphs.clear();
+			possible_subgraphs.addAll(temp);
+		}
+		// }
+
+		// add custom logic per question elements
+		String lowercase_question = question.toLowerCase();
+		// if (lowercase_question.contains("valid")) {
+		// temp.clear();
+		// for (Subgraph sub : possible_subgraphs) {
+		// if (sub.properties.contains("isValid")) {
+		// temp.add(sub);
+		// }
+		// }
+		// possible_subgraphs.clear();
+		// possible_subgraphs.addAll(temp);
+		// }
+		if (lowercase_question.contains("''") || lowercase_question.contains("\"")
+				|| lowercase_question.contains("second") || lowercase_question.contains(" sec ")
+				|| lowercase_question.contains("when")) {
+			temp.clear();
+			for (Subgraph sub : possible_subgraphs) {
+				// if the question is about time the subgraph should contain
+				// - Mode if the question refers to Sensors
+				// - Observation otherwise
+				if ((sub.entities.contains("Sensor") && sub.entities.contains("Mode"))
+						|| sub.entities.contains("Observation")) {
+					temp.add(sub);
+				}
+			}
+			possible_subgraphs.clear();
+			possible_subgraphs.addAll(temp);
+		}
+
+		// TODO: remove
+		FileWriter fw = new FileWriter("qanary_component-SubgraphIdentifier/src/main/resources/question_sub.csv", true);
+		BufferedWriter bw = new BufferedWriter(fw);
 		if (possible_subgraphs.size() > 0) {
 			String res_subgraphs = "";
 			for (Subgraph sub : possible_subgraphs) {
 				res_subgraphs += sub.text + "\n";
 			}
 			logger.info("Found the following possible subgraphs:\n\n" + res_subgraphs);
+			String smallestValidSubgraph = getSmallestValidSubgraph(possible_subgraphs);
+			logger.info("Found smallest valid subgraph: " + smallestValidSubgraph);
+			// TODO: remove
+			bw.write("\"" + question + "\",\"" + smallestValidSubgraph + "\"");
 		} else {
 			logger.error("No valid subgraphs found to answer the given question!");
+			// TODO: remove
+			bw.write("\"" + question + "\",");
 		}
-		
+		// TODO; remove
+		bw.newLine();
+		bw.close();
+
 		// STEP 3: store computed knowledge about the given question into the Qanary
 		// triplestore (the global process memory)
 
@@ -165,7 +471,8 @@ public class SubgraphIdentifier extends QanaryComponent {
 				myQanaryMessage.getValues().get(myQanaryMessage.getEndpoint()));
 		// push data to the Qanary triplestore
 		// String sparqlUpdateQuery = "..."; // define your SPARQL UPDATE query here
-		// myQanaryUtils.updateTripleStore(sparqlUpdateQuery, myQanaryMessage.getEndpoint());
+		// myQanaryUtils.updateTripleStore(sparqlUpdateQuery,
+		// myQanaryMessage.getEndpoint());
 
 		return myQanaryMessage;
 	}
