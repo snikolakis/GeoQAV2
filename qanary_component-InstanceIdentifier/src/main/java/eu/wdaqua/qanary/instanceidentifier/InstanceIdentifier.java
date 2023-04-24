@@ -219,7 +219,7 @@ public class InstanceIdentifier extends QanaryComponent {
 		List<Instance> result = new ArrayList<Instance>();
 		for (Instance instance:mappedInstances) {
 			for (Instance instance2:mappedInstances) {
-				if (!instance.getLabel().equals(instance2.getLabel())) {
+				if (!instance.getLabel().equals(instance2.getLabel()) || mappedInstances.size() == 1) {
 					if (instance.getBegin() <= instance2.getBegin() && instance.getEnd() >= instance2.getEnd()) {
 						result.add(instance);
 					}
@@ -423,8 +423,10 @@ http://kr.di.uoa.gr/yago2geo/ontology/OSM_canal
 		//sliding window for string similarity
 		boolean falgFound = false;
 		// String lastInstance = "";
-		for (String instanceLabel : instances.keySet()) {
-			int wordCount = wordcount(instanceLabel);
+		for (String instanceLabelUri : instances.keySet()) {
+			String instanceLabel = instanceLabelUri.substring(instanceLabelUri.lastIndexOf("#") + 1);
+			// int wordCount = wordcount(instanceLabel);
+			int wordCount = 1;
 //			System.out.println("total words :"+wordCount+"\t in : "+instanceLabel);
 //			String wordsOdSentence[] = myQuestionNl.split(" ");
 			List<String> ngramsOfquestion = ngrams(wordCount,questionWoStopwords);//myQuestion
@@ -443,7 +445,7 @@ http://kr.di.uoa.gr/yago2geo/ontology/OSM_canal
 					int end = myQuestion.toLowerCase().indexOf(lastWordOfNgram.toLowerCase()) + lastWordOfNgram.length();
 					instance.setBegin(begin);
 					instance.setEnd(end);
-					instance.setURI(instances.get(instanceLabel));
+					instance.setURI(instanceLabelUri);
 					instance.setLabel(instanceLabel);
 					mappedInstances.add(instance);
 					System.out.println("Identified Instances: " + instanceLabel + " ============================"
@@ -512,7 +514,7 @@ http://kr.di.uoa.gr/yago2geo/ontology/OSM_canal
 // 		}
 
 
-		ArrayList<Instance> removalList = new ArrayList<Instance>();
+		// ArrayList<Instance> removalList = new ArrayList<Instance>();
 
 //		for (Instance tempInstance : mappedInstances) {
 //			String conUri = tempInstance.getURI();
@@ -549,9 +551,9 @@ http://kr.di.uoa.gr/yago2geo/ontology/OSM_canal
 ////			System.out.println("Instance: " + conUri);
 //		}
 //
-		for (Instance removalC : removalList) {
-			mappedInstances.remove(removalC);
-		}
+		// for (Instance removalC : removalList) {
+		// 	mappedInstances.remove(removalC);
+		// }
 
 		for (Instance mappedInstance : mappedInstances) {
 			// insert data in QanaryMessage.outgraph
@@ -562,7 +564,7 @@ http://kr.di.uoa.gr/yago2geo/ontology/OSM_canal
 					+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " //
 					+ "INSERT { " //
 					+ "GRAPH <" + myQanaryQuestion.getOutGraph() + "> { " //
-					+ "  ?a a qa:AnnotationOfInstances . " //
+					+ "  ?a a qa:AnnotationOfInstance . " //
 					+ "  ?a oa:hasTarget [ " //
 					+ "           a oa:SpecificResource; " //
 					+ "             oa:hasSource    ?source; " //
@@ -582,8 +584,7 @@ http://kr.di.uoa.gr/yago2geo/ontology/OSM_canal
 					+ "  BIND (<" + myQanaryQuestion.getUri() + "> AS ?source  ) ." //
 					+ "}";
 			logger.debug("Sparql query to add instances to Qanary triplestore: {}", sparql);
-			// TODO: uncomment!
-			// myQanaryUtils.updateTripleStore(sparql, myQanaryQuestion.getEndpoint().toString());
+			myQanaryUtils.updateTripleStore(sparql, myQanaryQuestion.getEndpoint().toString());
 		}
 
 		return myQanaryMessage;
