@@ -1,8 +1,24 @@
 Agent,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Agent
+Anode,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Anode
+Calculated Property,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#CalculatedProperty
 Calculated Value,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#CalculatedValue
+Cathode,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Cathode
+Cathode Humidity Result,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#CathodeHumidityResult
+Condition,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Condition
+Current Sensor,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#CurrentSensor
+Failure Mode,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#FailureMode
 Feature Of Interest,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#FeatureOfInterest
+Fuel Cell,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#FuelCell
+Fuel Cell Component,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#FuelCellComponent
 Fuel Cell Stack,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#FuelCellStack
 Fuel Cell System,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#FuelCellSystem
+Health Mode,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#HealthMode
+Health Monitoring Sensor,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#HealthMonitoringSensor
+High Voltage Cycle Number,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#HighVoltageCycleNumber
+Humidity Change Result,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#HumidityChangeResult
+Low Voltage Cycle Number,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#LowVoltageCycleNumber
+Medium Voltage Cycle Number,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#MediumVoltageCycleNumber
+Membrane,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Membrane
 Mitigation Action,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#MitigationAction
 Mode,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Mode
 Observable Property,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#ObservableProperty
@@ -10,9 +26,17 @@ Observation,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Observat
 Operating Range,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#OperatingRange
 Platform,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Platform
 Property,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Property
-Reliability,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Reliability
+Relative Humidity Sensor,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#RelativeHumiditySensor
+Relative Humidity Sensor Output,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#RelativeHumiditySensorOutput
 Result,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Result
 Sensor,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Sensor
 Sensor Output,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#SensorOutput
+Sensor Reliability,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#SensorReliability
 State,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#State
+Stoichiometry Result,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#StoichiometryResult
 System,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#System
+Temperature Sensor,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#TemperatureSensor
+Temperature Sensor Output,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#TemperatureSensorOutput
+Thing,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Thing
+Voltage Cycle Number,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#VoltageCycleNumber
+Voltage Sensor,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#VoltageSensor
