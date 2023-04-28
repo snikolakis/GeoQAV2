@@ -494,7 +494,7 @@ public class PropertyIdentifierPEMF extends QanaryComponent {
 		for (String propertyLabel : properties.keySet()) {
 			String propertyLabelUri = properties.get(propertyLabel);
 			String propertyLabelWoAux = getPropertyWoAuxiliaryVerb(propertyLabel);
-			int wordCount = wordcount(propertyLabel);
+			int wordCount = wordcount(propertyLabelWoAux);
 			// int wordCount = 1;
 			// System.out.println("total words :"+wordCount+"\t in : "+propertyLabel);
 			// String wordsOdSentence[] = myQuestionNl.split(" ");
@@ -644,30 +644,56 @@ public class PropertyIdentifierPEMF extends QanaryComponent {
 		for (PropertyPEMF mappedProperty : mappedProperties) {
 			// insert data in QanaryMessage.outgraph
 			logger.info("apply vocabulary alignment on outgraph: {}", myQanaryQuestion.getOutGraph());
+			// String sparql = "" //
+			// + "PREFIX qa: <http://www.wdaqua.eu/qa#> " //
+			// + "PREFIX oa: <http://www.w3.org/ns/openannotation/core/> " //
+			// + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " //
+			// + "INSERT { " //
+			// + "GRAPH <" + myQanaryQuestion.getOutGraph() + "> { " //
+			// + " ?a a qa:AnnotationOfRelation . " //
+			// + " ?a oa:hasTarget [ " //
+			// + " a oa:SpecificResource; " //
+			// + " oa:hasSource ?source; " //
+			// + " oa:hasSelector [ " //
+			// + " a oa:TextPositionSelector ; " //
+			// + " oa:start \"" + mappedProperty.getBegin() + "\"^^xsd:nonNegativeInteger ;
+			// " //
+			// + " oa:end \"" + mappedProperty.getEnd() + "\"^^xsd:nonNegativeInteger " //
+			// + " ] " //
+			// + " ] . " //
+			// + " ?a oa:hasBody ?mappedPropertyURI;" //
+			// // + " oa:annotatedBy qa:PropertyIdentifier; " //
+			// + "}} " //
+			// + "WHERE { " //
+			// + " BIND (IRI(str(RAND())) AS ?a) ."//
+			// + " BIND (now() AS ?time) ." //
+			// + " BIND (<" + mappedProperty.getURI() + "> AS ?mappedPropertyURI) ." //
+			// + " BIND (<" + myQanaryQuestion.getUri() + "> AS ?source ) ." //
+			// + "}";
 			String sparql = "" //
 					+ "PREFIX qa: <http://www.wdaqua.eu/qa#> " //
 					+ "PREFIX oa: <http://www.w3.org/ns/openannotation/core/> " //
 					+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " //
 					+ "INSERT { " //
 					+ "GRAPH <" + myQanaryQuestion.getOutGraph() + "> { " //
-					+ "  ?a a qa:AnnotationOfRelation . " //
+					+ "  ?a a qa:AnnotationOfRelation." //
 					+ "  ?a oa:hasTarget [ " //
-					+ "           a oa:SpecificResource; " //
-					+ "             oa:hasSource    ?source; " //
+					+ "        a    oa:SpecificResource; " //
+					+ "        oa:hasSource    <" + myQanaryQuestion.getUri() + ">; " //
+					+ "        oa:hasRelation [ " //
+					// + " a oa:GeoRelation ; " //
+					// + " oa:geoRelation <" + myDetectedRelation.getGeospatialRelationIdentifier()
+					// + "> ; " //
 					+ "             oa:hasSelector  [ " //
 					+ "                    a oa:TextPositionSelector ; " //
 					+ "                    oa:start \"" + mappedProperty.getBegin() + "\"^^xsd:nonNegativeInteger ; " //
-					+ "                    oa:end   \"" + mappedProperty.getEnd() + "\"^^xsd:nonNegativeInteger  " //
+					+ "                    oa:relString \"" + mappedProperty.getURI() + "\"^^xsd:string ;"
 					+ "             ] " //
-					+ "  ] . " //
-					+ "  ?a oa:hasBody ?mappedPropertyURI;" //
-					+ "     oa:annotatedBy qa:PropertyIdentifier; " //
-					+ "}} " //
+					+ "        ] " //
+					+ "  ] " + "}} " //
 					+ "WHERE { " //
-					+ "  BIND (IRI(str(RAND())) AS ?a) ."//
-					+ "  BIND (now() AS ?time) ." //
-					+ "  BIND (<" + mappedProperty.getURI() + "> AS ?mappedPropertyURI) ." //
-					+ "  BIND (<" + myQanaryQuestion.getUri() + "> AS ?source  ) ." //
+					+ "BIND (IRI(str(RAND())) AS ?a) ." //
+					+ "BIND (now() as ?time) " //
 					+ "}";
 			logger.debug("Sparql query to add properties to Qanary triplestore: {}", sparql);
 			myQanaryUtils.updateTripleStore(sparql, myQanaryQuestion.getEndpoint().toString());
