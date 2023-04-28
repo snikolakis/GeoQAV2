@@ -5,5 +5,5 @@ state,HealthMode
 monitor,madeBySensor+madeObservation
 measurement,Observation;hasResult;Result;hasValue
 output,Observation;hasResult;Result;hasValue
-value,Observation;hasResult;Result;hasValue
+value,Observation;hasResult;Result;hasValue+CalculatedValue;hasValue
 monitoring,Sensor;observes;ObservableProperty
