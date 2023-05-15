@@ -488,6 +488,7 @@ public class PropertyIdentifierPEMF extends QanaryComponent {
 		 */
 		// the question without stopwords
 		String questionWoStopwords = remove_stopwords(myQuestion);
+		String questionClean = questionWoStopwords.toLowerCase().replace("output", "").strip();
 		// sliding window for string similarity
 		boolean falgFound = false;
 		// String lastProperty = "";
@@ -498,7 +499,7 @@ public class PropertyIdentifierPEMF extends QanaryComponent {
 			// int wordCount = 1;
 			// System.out.println("total words :"+wordCount+"\t in : "+propertyLabel);
 			// String wordsOdSentence[] = myQuestionNl.split(" ");
-			List<String> ngramsOfquestion = ngrams(wordCount, questionWoStopwords);// myQuestion
+			List<String> ngramsOfquestion = ngrams(wordCount, questionClean);// myQuestion
 			JaroWinkler jw = new JaroWinkler();
 			double similarityScore = 0.0;
 			for (String ngramwords : ngramsOfquestion) {
@@ -506,8 +507,8 @@ public class PropertyIdentifierPEMF extends QanaryComponent {
 						propertyLabelWoAux.toLowerCase(Locale.ROOT));
 				System.out.println("got similarity for  ngram :" + ngramwords + "\t and property label : "
 						+ propertyLabel + "\t is = " + similarityScore);
-				if (similarityScore > 0.95) {
-					System.out.println("====================got similarity more than 95 for  ngram :" + ngramwords
+				if (similarityScore > 0.92) {
+					System.out.println("====================got similarity more than 92 for  ngram :" + ngramwords
 							+ "\t and property label : " + propertyLabel);
 					falgFound = true;
 					PropertyPEMF property = new PropertyPEMF();
@@ -670,31 +671,54 @@ public class PropertyIdentifierPEMF extends QanaryComponent {
 			// + " BIND (<" + mappedProperty.getURI() + "> AS ?mappedPropertyURI) ." //
 			// + " BIND (<" + myQanaryQuestion.getUri() + "> AS ?source ) ." //
 			// + "}";
-			String sparql = "" //
-					+ "PREFIX qa: <http://www.wdaqua.eu/qa#> " //
-					+ "PREFIX oa: <http://www.w3.org/ns/openannotation/core/> " //
-					+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " //
-					+ "INSERT { " //
-					+ "GRAPH <" + myQanaryQuestion.getOutGraph() + "> { " //
-					+ "  ?a a qa:AnnotationOfRelation." //
-					+ "  ?a oa:hasTarget [ " //
-					+ "        a    oa:SpecificResource; " //
-					+ "        oa:hasSource    <" + myQanaryQuestion.getUri() + ">; " //
-					+ "        oa:hasRelation [ " //
-					// + " a oa:GeoRelation ; " //
-					// + " oa:geoRelation <" + myDetectedRelation.getGeospatialRelationIdentifier()
-					// + "> ; " //
-					+ "             oa:hasSelector  [ " //
-					+ "                    a oa:TextPositionSelector ; " //
-					+ "                    oa:start \"" + mappedProperty.getBegin() + "\"^^xsd:nonNegativeInteger ; " //
-					+ "                    oa:relString \"" + mappedProperty.getURI() + "\"^^xsd:string ;"
-					+ "             ] " //
-					+ "        ] " //
-					+ "  ] " + "}} " //
-					+ "WHERE { " //
-					+ "BIND (IRI(str(RAND())) AS ?a) ." //
-					+ "BIND (now() as ?time) " //
-					+ "}";
+			// String sparql = "" //
+			// + "PREFIX qa: <http://www.wdaqua.eu/qa#> " //
+			// + "PREFIX oa: <http://www.w3.org/ns/openannotation/core/> " //
+			// + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> " //
+			// + "INSERT { " //
+			// + "GRAPH <" + myQanaryQuestion.getOutGraph() + "> { " //
+			// + " ?a a qa:AnnotationOfRelation." //
+			// + " ?a oa:hasTarget [ " //
+			// + " a oa:SpecificResource; " //
+			// + " oa:hasSource <" + myQanaryQuestion.getUri() + ">; " //
+			// + " oa:hasRelation [ " //
+			// // + " a oa:GeoRelation ; " //
+			// // + " oa:geoRelation <" +
+			// myDetectedRelation.getGeospatialRelationIdentifier()
+			// // + "> ; " //
+			// + " oa:hasSelector [ " //
+			// + " a oa:TextPositionSelector ; " //
+			// + " oa:start \"" + mappedProperty.getBegin() + "\"^^xsd:nonNegativeInteger ;
+			// " //
+			// + " oa:relString \"" + mappedProperty.getURI() + "\"^^xsd:string ;"
+			// + " ] " //
+			// + " ] " //
+			// + " ] " + "}} " //
+			// + "WHERE { " //
+			// + "BIND (IRI(str(RAND())) AS ?a) ." //
+			// + "BIND (now() as ?time) " //
+			// + "}";
+			// String dummyConceptUri =
+			// "http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Sensor";
+			String sparql = "prefix qa: <http://www.wdaqua.eu/qa#> "
+					+ "prefix oa: <http://www.w3.org/ns/openannotation/core/> "
+					+ "prefix xsd: <http://www.w3.org/2001/XMLSchema#> "
+					+ "INSERT { "
+					+ "GRAPH <"
+					+ myQanaryQuestion.getOutGraph() + "> { "
+					+ "  ?a a qa:AnnotationOfRelation . "
+					+ "  ?a oa:hasTarget [ " + "           a    oa:SpecificResource; "
+					+ "           oa:hasSource    <" + myQanaryQuestion.getUri() + ">; "
+					+ "			  oa:hasSelector  [ " //
+					+ "			         a        oa:TextPositionSelector ; " //
+					+ "			         oa:start " + mappedProperty.getBegin() + " ; " //
+					+ "			         oa:end   " + mappedProperty.getEnd() + " " //
+					+ "		     ] " //
+					+ "  ] ; " + "     oa:hasValue <" + mappedProperty.getURI() + ">;"
+					// + " oa:hasConcept <" + dummyConceptUri + ">;"
+					// + " oa:annotatedBy <http:DBpedia-RelationExtractor.com> ; "
+					+ "	    oa:AnnotatedAt ?time  " + "}} " + "WHERE { " + "BIND (IRI(str(RAND())) AS ?a) ."
+					+ "BIND (now() as ?time) " + "}";
 			logger.debug("Sparql query to add properties to Qanary triplestore: {}", sparql);
 			myQanaryUtils.updateTripleStore(sparql, myQanaryQuestion.getEndpoint().toString());
 		}

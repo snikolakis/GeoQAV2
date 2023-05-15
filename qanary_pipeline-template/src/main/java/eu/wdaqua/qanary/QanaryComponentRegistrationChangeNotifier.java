@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +55,9 @@ public class QanaryComponentRegistrationChangeNotifier extends AbstractEventNoti
 	}
 
 	public List<String> getAvailableComponentNames() {
-		return new ArrayList<>(availableComponents.keySet());
+		List<String> components = new ArrayList<>(availableComponents.keySet());
+		Collections.sort(components);
+		return components;
 	}
 
 	public List<QanaryComponent> getAvailableComponentsFromNames(List<String> componentsToBeCalled) {

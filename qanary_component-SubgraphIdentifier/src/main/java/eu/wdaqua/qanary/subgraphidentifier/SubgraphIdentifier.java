@@ -151,6 +151,143 @@ public class SubgraphIdentifier extends QanaryComponent {
 
 	}
 
+	private ArrayList<Subgraph> getSubgraphsBasedOnSynonyms(String question, Set<Concept> concepts,
+			ArrayList<Subgraph> possible_subgraphs) {
+		// find all subgraphs that satisfy synonyms and then use those as possible
+		// subgraphs for the rest of the process
+		ArrayList<Subgraph> temp = new ArrayList<Subgraph>();
+		String lowercase_question = question.toLowerCase();
+		for (String word : this.synonymsList.keySet()) {
+			int word_index = lowercase_question.indexOf(word);
+			if (word_index != -1) {
+				boolean should_ignore_synonym = false;
+				for (Concept concept : concepts) {
+					// check that this word was not used for any concept found
+					if (word_index >= concept.begin && word_index < concept.end) {
+						should_ignore_synonym = true;
+						break;
+					}
+				}
+				if (!should_ignore_synonym) {
+					for (Subgraph subgraph : possible_subgraphs) {
+						for (String synonym : this.synonymsList.get(word)) {
+							if (subgraph.text.contains(synonym)) {
+								temp.add(subgraph);
+							}
+						}
+					}
+				}
+
+			}
+		}
+		if (temp.size() > 0) {
+			return temp;
+		} else {
+			return possible_subgraphs;
+		}
+	}
+
+	private ArrayList<Subgraph> getSubgraphsBasedOnConcepts(Set<String> conceptsUri,
+			Map<String, ArrayList<String>> superclassRelations, ArrayList<Subgraph> possible_subgraphs) {
+		ArrayList<Subgraph> temp = new ArrayList<Subgraph>();
+		if (conceptsUri.size() == 0) {
+			return possible_subgraphs;
+		}
+		for (String concept : conceptsUri) {
+			temp.clear();
+			String classLabel = concept.substring(concept.lastIndexOf("#") + 1);
+			ArrayList<String> superclasses = superclassRelations.get(classLabel);
+			for (String temp_class : getAllRelevantClasses(classLabel, superclasses)) {
+				temp_class = mapClassName(temp_class);
+				String superclass_text = "";
+				if (!temp_class.equals(classLabel)) {
+					superclass_text = " (superclass)";
+				}
+				logger.info("Found concept" + superclass_text + ": " + temp_class);
+				for (Subgraph sub : possible_subgraphs) {
+					if (sub.entities.contains(temp_class)) {
+						temp.add(sub);
+					}
+				}
+			}
+		}
+		return temp;
+	}
+
+	private ArrayList<Subgraph> getSubgraphsBasedOnInstances(Set<String> instancesUri,
+			Map<String, String> instanceClasses, Map<String, ArrayList<String>> superclassRelations,
+			ArrayList<Subgraph> possible_subgraphs) {
+		ArrayList<Subgraph> temp = new ArrayList<Subgraph>();
+		if (instancesUri.size() == 0) {
+			return possible_subgraphs;
+		}
+		for (String instance : instancesUri) {
+			temp.clear();
+			String instanceClassLabel = instanceClasses.get(instance);
+			ArrayList<String> superclasses = superclassRelations.get(instanceClassLabel);
+			for (String temp_class : getAllRelevantClasses(instanceClassLabel, superclasses)) {
+				temp_class = mapClassName(temp_class);
+				String superclass_text = "";
+				if (!temp_class.equals(instanceClassLabel)) {
+					superclass_text = " (superclass)";
+				}
+				logger.info("Found the instance class" + superclass_text + ": " + temp_class);
+				for (Subgraph sub : possible_subgraphs) {
+					if (sub.entities.contains(temp_class)) {
+						temp.add(sub);
+					}
+				}
+			}
+		}
+		return temp;
+	}
+
+	private ArrayList<Subgraph> getSubgraphsBasedOnProperties(Set<String> propertiesUri,
+			ArrayList<Subgraph> possible_subgraphs) {
+		ArrayList<Subgraph> temp = new ArrayList<Subgraph>();
+		if (propertiesUri.size() == 0) {
+			return possible_subgraphs;
+		}
+		for (String property : propertiesUri) {
+			temp.clear();
+			String propertyLabel = property.substring(property.lastIndexOf("#") + 1);
+			logger.info("Found the property: " + propertyLabel);
+			for (Subgraph sub : possible_subgraphs) {
+				if (sub.properties.contains(propertyLabel)) {
+					temp.add(sub);
+				}
+			}
+		}
+		return temp;
+	}
+
+	private ArrayList<Subgraph> getSubgraphsBasedOnRules(String question, ArrayList<Subgraph> possible_subgraphs) {
+		// add custom logic per question elements
+		ArrayList<Subgraph> temp = new ArrayList<Subgraph>();
+		boolean foundRule = false;
+		String lowercase_question = question.toLowerCase();
+		if (lowercase_question.contains("''") || lowercase_question.contains("\"")
+				|| lowercase_question.contains("second") || lowercase_question.contains(" sec ")
+				|| lowercase_question.contains("when")) {
+			foundRule = true;
+			temp.clear();
+			for (Subgraph sub : possible_subgraphs) {
+				// if the question is about time the subgraph should contain
+				// - Mode if the question refers to Sensors
+				// - Observation otherwise
+				if ((sub.entities.contains("Sensor") && sub.entities.contains("Mode"))
+						|| sub.entities.contains("Observation")) {
+					temp.add(sub);
+				}
+			}
+		}
+		if (foundRule) {
+			return temp;
+		} else {
+			return possible_subgraphs;
+		}
+	}
+
 	private static String getSmallestValidSubgraph(ArrayList<Subgraph> possible_subgraphs) {
 		int smallestSubgraphLength = Integer.MAX_VALUE;
 		String smallestSubgraph = "";
@@ -265,7 +402,8 @@ public class SubgraphIdentifier extends QanaryComponent {
 		sparql = "PREFIX qa: <http://www.wdaqua.eu/qa#> "
 				+ "PREFIX oa: <http://www.w3.org/ns/openannotation/core/> "
 				+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> "//
-				+ "SELECT  ?uri ?start ?end " + "FROM <" + myQanaryQuestion.getInGraph() + "> " //
+				+ "SELECT  ?uri ?start ?end "
+				+ "FROM <" + myQanaryQuestion.getInGraph() + "> " //
 				+ "WHERE { " //
 				+ "  ?a a qa:AnnotationOfRelation . " + "  ?a oa:hasTarget [ " + " a    oa:SpecificResource; "
 				+ "           oa:hasSource    ?q; " + "				oa:hasSelector  [ " //
@@ -326,45 +464,12 @@ public class SubgraphIdentifier extends QanaryComponent {
 		}
 
 		ArrayList<Subgraph> possible_subgraphs = new ArrayList<Subgraph>(subgraphs);
+		Map<String, String> instanceClasses = loadListOfInstances(
+				"qanary_component-InstanceIdentifier/src/main/resources/instances.txt");
 
-		// find all subgraphs that satisfy synonyms and then use those as possible
-		// subgraphs for the rest of the process
-		ArrayList<Subgraph> temp = new ArrayList<Subgraph>();
-		for (String word : this.synonymsList.keySet()) {
-			if (question.contains(word)) {
-				for (Subgraph subgraph : possible_subgraphs) {
-					for (String synonym : this.synonymsList.get(word)) {
-						if (subgraph.text.contains(synonym)) {
-							temp.add(subgraph);
-						}
-					}
-				}
-			}
-		}
-		possible_subgraphs.clear();
-		possible_subgraphs.addAll(temp);
+		possible_subgraphs = getSubgraphsBasedOnSynonyms(question, concepts, possible_subgraphs);
 
-		for (String concept : conceptsUri) {
-			temp.clear();
-			String classLabel = concept.substring(concept.lastIndexOf("#") + 1);
-			ArrayList<String> superclasses = superclassRelations.get(classLabel);
-			for (String temp_class : getAllRelevantClasses(classLabel, superclasses)) {
-				temp_class = mapClassName(temp_class);
-				String superclass_text = "";
-				if (!temp_class.equals(classLabel)) {
-					superclass_text = " (superclass)";
-				}
-				logger.info("Found concept" + superclass_text + ": " + temp_class);
-				for (Subgraph sub : possible_subgraphs) {
-					if (sub.entities.contains(temp_class)) {
-						temp.add(sub);
-					}
-				}
-			}
-			possible_subgraphs.clear();
-			possible_subgraphs.addAll(temp);
-		}
-
+		possible_subgraphs = getSubgraphsBasedOnConcepts(conceptsUri, superclassRelations, possible_subgraphs);
 		// if (possible_subgraphs.size() > 0) {
 		// String res_subgraphs = "";
 		// for (Subgraph sub : possible_subgraphs) {
@@ -374,86 +479,39 @@ public class SubgraphIdentifier extends QanaryComponent {
 		// } else {
 		// logger.error("No valid subgraphs found to answer the given question!");
 		// }
-		for (String property : propertiesUri) {
-			temp.clear();
-			String propertyLabel = property.substring(property.lastIndexOf("#") + 1);
-			logger.info("Found the property: " + propertyLabel);
-			for (Subgraph sub : possible_subgraphs) {
-				if (sub.properties.contains(propertyLabel)) {
-					temp.add(sub);
-				}
-			}
-			possible_subgraphs.clear();
-			possible_subgraphs.addAll(temp);
-		}
+		possible_subgraphs = getSubgraphsBasedOnProperties(propertiesUri, possible_subgraphs);
 
 		// if (possible_subgraphs.size() > 0) {
-		Map<String, String> instanceClasses = loadListOfInstances(
-				"qanary_component-InstanceIdentifier/src/main/resources/instances.txt");
-		for (String instance : instancesUri) {
-			temp.clear();
-			String instanceClassLabel = instanceClasses.get(instance);
-			ArrayList<String> superclasses = superclassRelations.get(instanceClassLabel);
-			for (String temp_class : getAllRelevantClasses(instanceClassLabel, superclasses)) {
-				temp_class = mapClassName(temp_class);
-				String superclass_text = "";
-				if (!temp_class.equals(instanceClassLabel)) {
-					superclass_text = " (superclass)";
-				}
-				logger.info("Found the instance class" + superclass_text + ": " + temp_class);
-				for (Subgraph sub : possible_subgraphs) {
-					if (sub.entities.contains(temp_class)) {
-						temp.add(sub);
-					}
-				}
-			}
-			possible_subgraphs.clear();
-			possible_subgraphs.addAll(temp);
-		}
+		possible_subgraphs = getSubgraphsBasedOnInstances(instancesUri, instanceClasses, superclassRelations,
+				possible_subgraphs);
 		// }
 
-		// add custom logic per question elements
-		String lowercase_question = question.toLowerCase();
-		// if (lowercase_question.contains("valid")) {
-		// temp.clear();
-		// for (Subgraph sub : possible_subgraphs) {
-		// if (sub.properties.contains("isValid")) {
-		// temp.add(sub);
-		// }
-		// }
-		// possible_subgraphs.clear();
-		// possible_subgraphs.addAll(temp);
-		// }
-		if (lowercase_question.contains("''") || lowercase_question.contains("\"")
-				|| lowercase_question.contains("second") || lowercase_question.contains(" sec ")
-				|| lowercase_question.contains("when")) {
-			temp.clear();
-			for (Subgraph sub : possible_subgraphs) {
-				// if the question is about time the subgraph should contain
-				// - Mode if the question refers to Sensors
-				// - Observation otherwise
-				if ((sub.entities.contains("Sensor") && sub.entities.contains("Mode"))
-						|| sub.entities.contains("Observation")) {
-					temp.add(sub);
-				}
-			}
-			possible_subgraphs.clear();
-			possible_subgraphs.addAll(temp);
-		}
+		possible_subgraphs = getSubgraphsBasedOnRules(question, possible_subgraphs);
 
 		// TODO: remove
 		FileWriter fw = new FileWriter("qanary_component-SubgraphIdentifier/src/main/resources/question_sub.csv", true);
 		BufferedWriter bw = new BufferedWriter(fw);
+		String sensorNameSubgraph = "Sensor;hasName;string_value";
+		String sensorReliabilitySubgraph = "Sensor;hasReliability;SensorReliability;atTime_inSec;float_value";
 		if (possible_subgraphs.size() > 0) {
 			String res_subgraphs = "";
-			for (Subgraph sub : possible_subgraphs) {
-				res_subgraphs += sub.text + "\n";
-			}
-			logger.info("Found the following possible subgraphs:\n\n" + res_subgraphs);
+			// for (Subgraph sub : possible_subgraphs) {
+			// res_subgraphs += sub.text + "\n";
+			// }
+			// logger.info("Found the following possible subgraphs:\n\n" + res_subgraphs);
 			String smallestValidSubgraph = getSmallestValidSubgraph(possible_subgraphs);
 			logger.info("Found smallest valid subgraph: " + smallestValidSubgraph);
+			res_subgraphs = smallestValidSubgraph;
+			// also, add the Sensor name subgraph if the word "Sensor" is found inside the
+			// subgraph
+			if (smallestValidSubgraph.contains("Sensor")) {
+				res_subgraphs += "+" + sensorNameSubgraph;
+			}
+			if (smallestValidSubgraph.contains("SensorReliability")) {
+				res_subgraphs += "+" + sensorReliabilitySubgraph;
+			}
 			// TODO: remove
-			bw.write("\"" + question + "\",\"" + smallestValidSubgraph + "\"");
+			bw.write("\"" + question + "\",\"" + res_subgraphs + "\"");
 		} else {
 			logger.error("No valid subgraphs found to answer the given question!");
 			// TODO: remove

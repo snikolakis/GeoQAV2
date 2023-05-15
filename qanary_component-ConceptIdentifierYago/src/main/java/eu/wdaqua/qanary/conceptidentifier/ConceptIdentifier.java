@@ -204,6 +204,20 @@ public class ConceptIdentifier extends QanaryComponent {
 		}
 	}
 
+	static List<Concept> removeOverlappingNgramConcepts(List<Concept> mappedConcepts) {
+		List<Concept> result = new ArrayList<Concept>();
+		for (Concept concept : mappedConcepts) {
+			for (Concept concept2 : mappedConcepts) {
+				if (!concept.getLabel().equals(concept2.getLabel()) || mappedConcepts.size() == 1) {
+					if (concept.getBegin() <= concept2.getBegin() && concept.getEnd() >= concept2.getEnd()) {
+						result.add(concept);
+					}
+				}
+			}
+		}
+		return result;
+	}
+
 	/**
 	 * implement this method encapsulating the functionality of your Qanary
 	 * component
@@ -437,6 +451,8 @@ public class ConceptIdentifier extends QanaryComponent {
 		 */
 		// sliding window for string similarity
 		// boolean falgFound = false;
+		String questionClean = myQuestion.toLowerCase().replace("output", "").strip();
+		System.out.println("Question after cleaning: " + questionClean);
 		for (String conceptLabel : yago2geoclassesmap.keySet()) {
 			// ignore concepts from checking
 			if (ignoreConcepts.contains(conceptLabel)) {
@@ -445,7 +461,7 @@ public class ConceptIdentifier extends QanaryComponent {
 			int wordCount = wordcount(conceptLabel);
 			// System.out.println("total words :"+wordCount+"\t in : "+conceptLabel);
 			// String wordsOdSentence[] = myQuestionNl.split(" ");
-			List<String> ngramsOfquestion = ngrams(wordCount, myQuestion);
+			List<String> ngramsOfquestion = ngrams(wordCount, questionClean);
 			JaroWinkler jw = new JaroWinkler();
 			double similarityScore = 0.0;
 			for (String ngramwords : ngramsOfquestion) {
@@ -459,6 +475,7 @@ public class ConceptIdentifier extends QanaryComponent {
 					// falgFound = true;
 					Concept concept = new Concept();
 					int begin = myQuestion.toLowerCase().indexOf(ngramwords.toLowerCase());
+					concept.setLabel(conceptLabel);
 					concept.setBegin(begin);
 					concept.setEnd(begin + ngramwords.length());
 					concept.setURI(yago2geoclassesmap.get(conceptLabel));
@@ -549,7 +566,9 @@ public class ConceptIdentifier extends QanaryComponent {
 		// for (Concept removalC : removalList) {
 		// mappedConcepts.remove(removalC);
 		// }
-
+		logger.info("The concepts found before filtering are: " + mappedConcepts);
+		mappedConcepts = removeOverlappingNgramConcepts(mappedConcepts);
+		logger.info("The concepts found after filtering are: " + mappedConcepts);
 		for (Concept mappedConcept : mappedConcepts) {
 			// insert data in QanaryMessage.outgraph
 			logger.info("apply vocabulary alignment on outgraph: {}", myQanaryQuestion.getOutGraph());

@@ -1,6 +1,5 @@
 package eu.wdaqua.qanary.conceptidentifier;
 
-
 public class Concept {
 	private int begin;
 	private int end;
@@ -19,8 +18,12 @@ public class Concept {
 		this.label = label;
 	}
 
-	public void setURI(String uri){
+	public void setURI(String uri) {
 		this.uri = uri;
+	}
+
+	public String getLabel() {
+		return this.label;
 	}
 
 	public int getBegin() {
@@ -35,10 +38,8 @@ public class Concept {
 		return this.uri;
 	}
 
-	public String toString()
-	{
-		return "begin = "+begin+" end = "+ end+" uri = "+uri;
+	public String toString() {
+		return "begin = " + begin + " end = " + end + " uri = " + uri;
 	}
-
 
 }
