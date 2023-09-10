@@ -84,3 +84,6 @@ stored-question*
 
 # screen output
 screenlog.*
+
+# ignore .csv files
+*.csv
