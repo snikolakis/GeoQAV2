@@ -1,44 +1,90 @@
 Agent,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Agent
+Air Mass Sensor,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#AirMassSensor
+Air Mass Sensor Observation,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#AirMassSensorObservation
+Air Mass Sensor Output,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#AirMassSensorOutput
+Air Pressure Sensor,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#AirPressureSensor
+Air Pressure Sensor Observation,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#AirPressureSensorObservation
+Air Pressure Sensor Output,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#AirPressureSensorOutput
 Anode,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Anode
 Anode Humidity Change Result,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#AnodeHumidityChangeResult
+Anode Relative Humidity Sensor Observation,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#AnodeRelativeHumiditySensorObservation
+Anode Relative Humidity Sensor Output,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#AnodeRelativeHumiditySensorOutput
 Anode Stoichiometry Result,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#AnodeStoichiometryResult
 Calculated Property,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#CalculatedProperty
 Calculated Value,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#CalculatedValue
 Cathode,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Cathode
 Cathode Humidity Change Result,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#CathodeHumidityChangeResult
 Cathode Humidity Result,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#CathodeHumidityResult
+Cathode Relative Humidity Sensor Observation,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#CathodeRelativeHumiditySensorObservation
+Cathode Relative Humidity Sensor Output,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#CathodeRelativeHumiditySensorOutput
 Condition,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Condition
-Current Sensor,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#CurrentSensor
+Electric Current Sensor,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#ElectricCurrentSensor
+Electric Current Sensor Observation,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#ElectricCurrentSensorObservation
+Electric Current Sensor Output,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#ElectricCurrentSensorOutput
+F C Observation Result,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#FCObservationResult
 Feature Of Interest,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#FeatureOfInterest
 Fuel Cell,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#FuelCell
-Fuel Cell Component,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#FuelCellComponent
+Fuel Cell Manufacturing Company,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#FuelCellManufacturingCompany
 Fuel Cell Stack,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#FuelCellStack
 Fuel Cell System,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#FuelCellSystem
+Fuel Cell System Component,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#FuelCellSystemComponent
 Fuel Cell System Failure Mode,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#FuelCellSystemFailureMode
 Health Mode,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#HealthMode
 Health Monitoring Sensor,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#HealthMonitoringSensor
 High Voltage Cycle Number,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#HighVoltageCycleNumber
 Humidity Change Result,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#HumidityChangeResult
+Hydrogen Mass Sensor,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#HydrogenMassSensor
+Hydrogen Mass Sensor Observation,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#HydrogenMassSensorObservation
+Hydrogen Mass Sensor Output,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#HydrogenMassSensorOutput
+Hydrogen Pressure Sensor,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#HydrogenPressureSensor
+Hydrogen Pressure Sensor Observation,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#HydrogenPressureSensorObservation
+Hydrogen Pressure Sensor Output,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#HydrogenPressureSensorOutput
+Inlet Air Pressure Sensor Observation,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#InletAirPressureSensorObservation
+Inlet Air Pressure Sensor Output,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#InletAirPressureSensorOutput
+Inlet Hydrogen Pressure Sensor Output,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#InletHydrogenPressureSensorOutput
+Inlet Hydrogen Sensor Observation,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#InletHydrogenSensorObservation
 Low Voltage Cycle Number,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#LowVoltageCycleNumber
+Manufacturing Company,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#ManufacturingCompany
 Medium Voltage Cycle Number,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#MediumVoltageCycleNumber
 Membrane,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Membrane
 Mitigation Action,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#MitigationAction
 Observable Property,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#ObservableProperty
 Observation,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Observation
 Operating Range,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#OperatingRange
+Outlet Air Pressure Sensor Observation,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#OutletAirPressureSensorObservation
+Outlet Air Pressure Sensor Output,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#OutletAirPressureSensorOutput
+Outlet Hydrogen Pressure Sensor Output,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#OutletHydrogenPressureSensorOutput
+Outlet Hydrogen Sensor Observation,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#OutletHydrogenSensorObservation
+P_ Air_inlet,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#P_Air_inlet
+P_ Air_outlet,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#P_Air_outlet
+P_ H2_inlet,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#P_H2_inlet
+P_ H2_outlet,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#P_H2_outlet
+P_sensor,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#P_sensor
 Platform,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Platform
+Power Sensor,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#PowerSensor
+Power Sensor Observation,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#PowerSensorObservation
+Power Sensor Output,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#PowerSensorOutput
 Property,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Property
 Relative Humidity Sensor,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#RelativeHumiditySensor
+Relative Humidity Sensor Observation,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#RelativeHumiditySensorObservation
 Relative Humidity Sensor Output,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#RelativeHumiditySensorOutput
 Result,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Result
 Sensor,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Sensor
+Sensor Manufacturing Company,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#SensorManufacturingCompany
 Sensor Mode,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#SensorMode
 Sensor Output,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#SensorOutput
 Sensor Reliability,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#SensorReliability
+Stack1 Temperature Sensor Observation,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Stack1TemperatureSensorObservation
+Stack2 Temperature Sensor Observation,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Stack2TemperatureSensorObservation
 State,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#State
 System,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#System
 Temperature Sensor,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#TemperatureSensor
+Temperature Sensor Observation,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#TemperatureSensorObservation
 Temperature Sensor Output,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#TemperatureSensorOutput
 Thing,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#Thing
+U_tot,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#U_tot
+User,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#User
 Voltage Cycle Number,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#VoltageCycleNumber
+Voltage Output,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#VoltageOutput
 Voltage Sensor,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#VoltageSensor
+Voltage Sensor Observation,http://www.semanticweb.org/savtr/ontologies/2022/9/PEMFC_DI#VoltageSensorObservation
