@@ -469,8 +469,8 @@ public class ConceptIdentifier extends QanaryComponent {
 						conceptLabel.toLowerCase(Locale.ROOT));
 				System.out.println("got similarity for  ngram :" + ngramwords + "\t and concept label : " + conceptLabel
 						+ "\t is = " + similarityScore);
-				if (similarityScore > 0.955) {
-					System.out.println("====================got similarity more than 95.5 for  ngram :" + ngramwords
+				if (similarityScore > 0.975) {
+					System.out.println("====================got similarity more than 97.5 for  ngram :" + ngramwords
 							+ "\t and concept label : " + conceptLabel);
 					// falgFound = true;
 					Concept concept = new Concept();

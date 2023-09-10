@@ -507,8 +507,8 @@ public class PropertyIdentifierPEMF extends QanaryComponent {
 						propertyLabelWoAux.toLowerCase(Locale.ROOT));
 				System.out.println("got similarity for  ngram :" + ngramwords + "\t and property label : "
 						+ propertyLabel + "\t is = " + similarityScore);
-				if (similarityScore > 0.92) {
-					System.out.println("====================got similarity more than 92 for  ngram :" + ngramwords
+				if (similarityScore > 0.93) {
+					System.out.println("====================got similarity more than 93 for  ngram :" + ngramwords
 							+ "\t and property label : " + propertyLabel);
 					falgFound = true;
 					PropertyPEMF property = new PropertyPEMF();

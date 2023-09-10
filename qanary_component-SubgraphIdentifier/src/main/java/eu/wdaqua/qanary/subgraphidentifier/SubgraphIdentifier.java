@@ -157,6 +157,11 @@ public class SubgraphIdentifier extends QanaryComponent {
 		// subgraphs for the rest of the process
 		ArrayList<Subgraph> temp = new ArrayList<Subgraph>();
 		String lowercase_question = question.toLowerCase();
+		// add output to use the "Result;hasValue;float_value" synonym
+		if (lowercase_question.contains(" more ") || lowercase_question.contains(" less ")
+				|| lowercase_question.contains(" equal ")) {
+			lowercase_question += " output";
+		}
 		for (String word : this.synonymsList.keySet()) {
 			int word_index = lowercase_question.indexOf(word);
 			if (word_index != -1) {
@@ -261,14 +266,18 @@ public class SubgraphIdentifier extends QanaryComponent {
 		return temp;
 	}
 
+	private boolean isQuestionAboutTime(String question) {
+		String lowercase_question = question.toLowerCase();
+		return lowercase_question.contains("''") || lowercase_question.contains("\"")
+				|| lowercase_question.contains("second") || lowercase_question.contains(" sec ")
+				|| lowercase_question.contains("when");
+	}
+
 	private ArrayList<Subgraph> getSubgraphsBasedOnRules(String question, ArrayList<Subgraph> possible_subgraphs) {
 		// add custom logic per question elements
 		ArrayList<Subgraph> temp = new ArrayList<Subgraph>();
 		boolean foundRule = false;
-		String lowercase_question = question.toLowerCase();
-		if (lowercase_question.contains("''") || lowercase_question.contains("\"")
-				|| lowercase_question.contains("second") || lowercase_question.contains(" sec ")
-				|| lowercase_question.contains("when")) {
+		if (this.isQuestionAboutTime(question)) {
 			foundRule = true;
 			temp.clear();
 			for (Subgraph sub : possible_subgraphs) {
@@ -276,6 +285,8 @@ public class SubgraphIdentifier extends QanaryComponent {
 				// - Mode if the question refers to Sensors
 				// - Observation otherwise
 				if ((sub.entities.contains("Sensor") && sub.entities.contains("Mode"))
+						|| (sub.entities.contains("Sensor") && sub.entities.contains("Result"))
+						|| (sub.entities.contains("Sensor") && sub.entities.contains("CalculatedValue"))
 						|| sub.entities.contains("Observation")) {
 					temp.add(sub);
 				}
@@ -493,6 +504,7 @@ public class SubgraphIdentifier extends QanaryComponent {
 		BufferedWriter bw = new BufferedWriter(fw);
 		String sensorNameSubgraph = "Sensor;hasName;string_value";
 		String sensorReliabilitySubgraph = "Sensor;hasReliability;SensorReliability;atTime_inSec;float_value";
+		String timePartialSubgraph = ";atTime_inSec;float_value";
 		if (possible_subgraphs.size() > 0) {
 			String res_subgraphs = "";
 			// for (Subgraph sub : possible_subgraphs) {
@@ -500,6 +512,13 @@ public class SubgraphIdentifier extends QanaryComponent {
 			// }
 			// logger.info("Found the following possible subgraphs:\n\n" + res_subgraphs);
 			String smallestValidSubgraph = getSmallestValidSubgraph(possible_subgraphs);
+			// if System is found, change to Sensor
+			if (smallestValidSubgraph.contains(";System;")) {
+				smallestValidSubgraph = smallestValidSubgraph.replace(";System;", ";Sensor;");
+			}
+			if (smallestValidSubgraph.indexOf("System;") == 0) {
+				smallestValidSubgraph = smallestValidSubgraph.replace("System;", "Sensor;");
+			}
 			logger.info("Found smallest valid subgraph: " + smallestValidSubgraph);
 			res_subgraphs = smallestValidSubgraph;
 			// also, add the Sensor name subgraph if the word "Sensor" is found inside the
@@ -509,6 +528,13 @@ public class SubgraphIdentifier extends QanaryComponent {
 			}
 			if (smallestValidSubgraph.contains("SensorReliability")) {
 				res_subgraphs += "+" + sensorReliabilitySubgraph;
+			}
+			if (this.isQuestionAboutTime(question) && !smallestValidSubgraph.contains("atTime_inSec")) {
+				if (smallestValidSubgraph.contains("State")) {
+					res_subgraphs += "+" + "State" + timePartialSubgraph;
+				} else if (smallestValidSubgraph.contains("Observation")) {
+					res_subgraphs += "+" + "Observation" + timePartialSubgraph;
+				}
 			}
 			// TODO: remove
 			bw.write("\"" + question + "\",\"" + res_subgraphs + "\"");
